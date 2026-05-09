@@ -1,0 +1,1913 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5ecd9">
+<title>The Royal Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper:        #f4ead4;
+    --paper-deep:   #ead995;
+    --ink:          #2a1f15;
+    --ink-soft:     #5d4a36;
+    --ink-faint:    #8a7558;
+    --burgundy:     #6b1f24;
+    --burgundy-dim: #4d1419;
+    --burgundy-warm:#8a2429;
+    --gold:         #b8923f;
+    --gold-light:   #e0c378;
+    --gold-dark:    #8a6d2b;
+    --rule:         #c9b489;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+
+html, body {
+margin: 0; padding: 0;
+background: var(–paper);
+color: var(–ink);
+font-family: ‘EB Garamond’, Georgia, serif;
+font-size: 18px;
+line-height: 1.55;
+-webkit-font-smoothing: antialiased;
+text-rendering: optimizeLegibility;
+}
+body {
+background:
+radial-gradient(ellipse at 20% 10%, rgba(255,245,210,0.6) 0%, transparent 60%),
+radial-gradient(ellipse at 80% 90%, rgba(180,140,80,0.10) 0%, transparent 55%),
+radial-gradient(ellipse at 50% 50%, var(–paper) 0%, var(–paper-deep) 130%);
+min-height: 100vh;
+min-height: 100dvh;
+}
+body::before {
+content: “”;
+position: fixed;
+inset: 0;
+pointer-events: none;
+background-image: url(“data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.13  0 0 0 0 0.05  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>”);
+opacity: 0.55;
+mix-blend-mode: multiply;
+z-index: 0;
+}
+body.book-closed { overflow: hidden; }
+
+.ledger {
+position: relative;
+z-index: 1;
+max-width: 620px;
+margin: 0 auto;
+padding: 56px 28px 96px;
+perspective: 1500px;
+perspective-origin: 50% 30%;
+}
+
+/* Pages */
+.page {
+transform-origin: left center;
+backface-visibility: hidden;
+}
+.page[hidden] { display: none; }
+.page.flipping-in {
+animation: pageFlipIn 0.55s cubic-bezier(0.5, 0.05, 0.3, 1) both;
+}
+.page.flipping-out {
+animation: pageFlipOut 0.25s cubic-bezier(0.4, 0, 0.7, 0.95) both;
+}
+@keyframes pageFlipIn {
+0%   { opacity: 0; transform: rotateY(80deg); }
+60%  { opacity: 1; }
+100% { opacity: 1; transform: rotateY(0deg); }
+}
+@keyframes pageFlipOut {
+0%   { opacity: 1; transform: rotateY(0deg); }
+100% { opacity: 0; transform: rotateY(-80deg); }
+}
+
+/* Masthead (Contents page only) */
+.masthead { text-align: center; margin-bottom: 36px; }
+.masthead h1 {
+font-family: ‘Cormorant Garamond’, serif;
+font-weight: 500;
+font-size: clamp(2.4rem, 8vw, 3.4rem);
+letter-spacing: 0.02em;
+color: var(–burgundy);
+margin: 0 0 6px;
+line-height: 1.05;
+outline: none;
+}
+.masthead h1:focus-visible { outline: none; }
+.masthead .subtitle {
+font-family: ‘EB Garamond’, serif;
+font-style: italic;
+color: var(–ink-soft);
+font-size: 1rem;
+margin: 0 0 18px;
+letter-spacing: 0.04em;
+}
+.flourish {
+display: block;
+margin: 0 auto;
+width: min(280px, 70%);
+height: 14px;
+color: var(–burgundy);
+}
+
+/* Instructions */
+.instructions {
+margin: 0 0 24px;
+border-top: 0.5px solid var(–rule);
+border-bottom: 0.5px solid var(–rule);
+}
+.instructions > summary {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 14px 4px;
+cursor: pointer;
+font-family: ‘EB Garamond’, serif;
+font-style: italic;
+font-size: 0.95rem;
+color: var(–ink-soft);
+letter-spacing: 0.04em;
+list-style: none;
+user-select: none;
+outline: none;
+transition: color 0.2s;
+}
+.instructions > summary::-webkit-details-marker { display: none; }
+.instructions > summary::after {
+content: “”;
+width: 12px; height: 8px;
+flex: 0 0 12px;
+background: url(“data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1.5 1.5 L6 6 L10.5 1.5' stroke='%236b1f24' stroke-width='1.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>”) no-repeat center;
+transition: transform 0.3s ease;
+}
+.instructions[open] > summary::after { transform: rotate(180deg); }
+.instructions > summary:hover,
+.instructions > summary:focus-visible { color: var(–burgundy); }
+.instr-list {
+list-style: none; margin: 0;
+padding: 0 4px 18px;
+}
+.instr-list li {
+padding: 12px 4px;
+border-top: 0.5px dashed var(–rule);
+font-size: 1rem;
+line-height: 1.55;
+color: var(–ink);
+}
+.instr-list li:first-child { border-top: 0; padding-top: 6px; }
+.instr-list em {
+font-style: italic;
+color: var(–burgundy);
+font-weight: 500;
+margin-right: 2px;
+}
+
+/* Contents page */
+.contents-heading {
+font-family: ‘Cormorant Garamond’, serif;
+font-style: italic;
+font-size: 1.05rem;
+color: var(–ink-faint);
+text-align: center;
+margin: 12px 0 14px;
+letter-spacing: 0.08em;
+text-transform: lowercase;
+}
+.contents-list {
+list-style: none; margin: 0; padding: 0;
+border-top: 0.5px solid var(–rule);
+}
+.contents-entry { border-bottom: 0.5px dashed var(–rule); }
+.contents-entry.contents-settings {
+border-bottom: 0;
+border-top: 0.5px solid var(–rule);
+margin-top: 24px;
+}
+.contents-btn {
+display: flex;
+align-items: baseline;
+gap: 14px;
+width: 100%;
+background: transparent;
+border: 0;
+padding: 16px 4px;
+cursor: pointer;
+text-align: left;
+color: var(–ink);
+font-family: inherit;
+transition: background 0.15s;
+}
+.contents-btn:hover { background: rgba(184, 146, 63, 0.06); }
+.contents-btn:focus-visible {
+outline: 2px solid var(–gold);
+outline-offset: -3px;
+}
+.contents-cap {
+font-family: ‘Cormorant Garamond’, serif;
+font-weight: 600;
+font-size: 1.6rem;
+color: var(–burgundy);
+width: 30px;
+flex: 0 0 30px;
+text-align: center;
+line-height: 1;
+}
+.contents-name {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: 1.4rem;
+color: var(–ink);
+font-weight: 500;
+}
+.contents-dots {
+flex: 1;
+border-bottom: 0.5px dotted var(–rule);
+margin: 0 4px 6px;
+align-self: end;
+min-width: 16px;
+}
+.contents-count {
+font-family: ‘EB Garamond’, serif;
+font-style: italic;
+color: var(–ink-soft);
+font-size: 1rem;
+flex: 0 0 auto;
+}
+.contents-count.empty { color: var(–ink-faint); }
+
+/* Back navigation */
+.back-btn {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+background: transparent;
+border: 0;
+font-family: ‘EB Garamond’, serif;
+font-style: italic;
+font-size: 0.95rem;
+color: var(–ink-soft);
+padding: 6px 4px;
+margin: 0 0 18px -4px;
+cursor: pointer;
+transition: color 0.2s;
+}
+.back-btn:hover,
+.back-btn:focus-visible { color: var(–burgundy); outline: none; }
+.back-arrow { width: 8px; height: 12px; color: currentColor; }
+
+/* Page header (Household / Settings) */
+.page-head {
+display: flex;
+align-items: center;
+gap: 16px;
+margin-bottom: 28px;
+padding-bottom: 16px;
+border-bottom: 0.5px solid var(–rule);
+}
+.page-dropcap {
+display: inline-grid;
+place-items: center;
+width: 64px; height: 64px;
+flex: 0 0 64px;
+font-family: ‘Cormorant Garamond’, serif;
+font-weight: 600;
+font-size: 3rem;
+color: var(–burgundy);
+background:
+radial-gradient(circle at 35% 30%, rgba(232, 195, 120, 0.25) 0%, transparent 65%),
+var(–paper);
+border: 0.5px solid var(–rule);
+box-shadow: inset 0 0 0 4px var(–paper), 0 0 0 0.5px var(–gold-dark);
+line-height: 1;
+padding-bottom: 6px;
+}
+.page-title {
+font-family: ‘Cormorant Garamond’, serif;
+font-weight: 500;
+font-size: 2rem;
+color: var(–ink);
+letter-spacing: 0.02em;
+margin: 0;
+outline: none;
+}
+.page-title:focus-visible { outline: none; }
+
+/* Inscribe panel */
+.inscribe {
+margin: 0 0 32px;
+padding: 18px 4px 22px;
+border-top: 0.5px solid var(–rule);
+border-bottom: 0.5px solid var(–rule);
+}
+.inscribe-grid {
+display: grid;
+grid-template-columns: 1fr;
+gap: 14px;
+}
+.field {
+display: flex;
+flex-direction: column;
+gap: 4px;
+}
+.field label {
+font-family: ‘EB Garamond’, serif;
+font-style: italic;
+font-size: 0.82rem;
+color: var(–ink-faint);
+letter-spacing: 0.08em;
+text-transform: lowercase;
+}
+.field input {
+font-family: ‘EB Garamond’, serif;
+font-size: 1.15rem;
+color: var(–ink);
+background: transparent;
+border: 0;
+border-bottom: 0.5px solid var(–rule);
+padding: 6px 2px 8px;
+border-radius: 0;
+outline: none;
+-webkit-appearance: none;
+appearance: none;
+transition: border-color 0.2s;
+}
+.field input:focus { border-bottom-color: var(–burgundy); }
+.row-double {
+display: grid;
+grid-template-columns: 2fr 1fr;
+gap: 16px;
+}
+@media (max-width: 520px) {
+.row-double { grid-template-columns: 1fr; gap: 14px; }
+}
+
+.inscribe-btn {
+margin-top: 14px;
+width: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 18px;
+font-family: ‘Cormorant Garamond’, serif;
+font-style: italic;
+font-weight: 500;
+font-size: 1.15rem;
+letter-spacing: 0.1em;
+color: var(–paper);
+background: var(–burgundy);
+border: 0;
+padding: 13px 20px;
+cursor: pointer;
+border-radius: 1px;
+box-shadow:
+inset 0 0 0 0.5px rgba(212, 181, 104, 0.55),
+0 1px 4px -2px rgba(40, 10, 14, 0.35);
+transition: transform 0.12s ease, background 0.2s;
+}
+.inscribe-btn:hover { background: var(–burgundy-warm); }
+.inscribe-btn:active { transform: translateY(1px); }
+.inscribe-btn:focus-visible {
+outline: 2px solid var(–gold);
+outline-offset: 3px;
+}
+.inscribe-btn .ornament {
+width: 7px; height: 7px;
+flex: 0 0 7px;
+display: block;
+}
+.inscribe-btn .ornament path { fill: var(–gold-light); }
+
+/* Collapsed state: a single toggle button. Form expands on tap. */
+.inscribe-toggle {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 12px;
+width: 100%;
+background: transparent;
+border: 0;
+padding: 6px 4px;
+cursor: pointer;
+color: var(–burgundy);
+font-family: ‘EB Garamond’, serif;
+font-style: italic;
+font-size: 1rem;
+letter-spacing: 0.02em;
+border-radius: 1px;
+transition: background 0.15s, color 0.2s;
+}
+.inscribe-toggle:hover { background: rgba(184, 146, 63, 0.06); }
+.inscribe-toggle:focus-visible { outline: 2px solid var(–gold); outline-offset: 2px; }
+.inscribe-toggle-mark {
+font-size: 1.4rem;
+color: var(–gold);
+line-height: 1;
+font-weight: 500;
+}
+
+.inscribe-actions {
+display: flex;
+align-items: center;
+gap: 12px;
+margin-top: 14px;
+}
+.inscribe-actions .inscribe-btn {
+flex: 1;
+margin-top: 0;
+}
+.inscribe-done {
+flex: 0 0 auto;
+background: transparent;
+border: 0;
+color: var(–ink-faint);
+font-family: ‘EB Garamond’, serif;
+font-style: italic;
+font-size: 0.95rem;
+cursor: pointer;
+padding: 8px 14px;
+border-radius: 1px;
+transition: color 0.2s;
+}
+.inscribe-done:hover { color: var(–burgundy); }
+.inscribe-done:focus-visible { outline: 2px solid var(–gold); outline-offset: 2px; }
+
+/* Items */
+.items {
+list-style: none;
+margin: 0 0 24px;
+padding: 0;
+}
+.item {
+display: flex;
+align-items: stretch;
+border-bottom: 0.5px dashed var(–rule);
+position: relative;
+}
+.item:last-child { border-bottom: 0; }
+
+/* Main row button — same grid for sealed and unsealed */
+.seal-btn {
+flex: 1 1 auto;
+min-width: 0;
+display: grid;
+grid-template-columns: auto 1fr auto;
+align-items: center;
+gap: 14px;
+padding: 14px 4px;
+background: transparent;
+border: 0;
+cursor: pointer;
+font: inherit;
+color: inherit;
+text-align: left;
+border-radius: 1px;
+transition: background 0.15s;
+}
+.seal-btn:hover { background: rgba(184, 146, 63, 0.06); }
+.seal-btn:focus-visible { outline: 2px solid var(–gold); outline-offset: -2px; }
+
+/* Erase button on the right */
+.erase-btn {
+flex: 0 0 auto;
+width: 44px;
+display: grid;
+place-items: center;
+background: transparent;
+border: 0;
+cursor: pointer;
+color: var(–ink-faint);
+padding: 0;
+border-radius: 1px;
+transition: color 0.2s, background 0.15s;
+}
+.erase-btn:hover {
+color: var(–burgundy);
+background: rgba(107, 31, 36, 0.05);
+}
+.erase-btn:focus-visible { outline: 2px solid var(–gold); outline-offset: -2px; }
+.erase-icon { width: 14px; height: 14px; }
+
+.item-name {
+font-size: 1.1rem;
+color: var(–ink);
+transition: color 0.4s, opacity 0.4s;
+}
+.item-qty {
+font-family: ‘EB Garamond’, serif;
+font-style: italic;
+color: var(–ink-soft);
+font-size: 0.95rem;
+text-align: right;
+min-width: 0;
+}
+
+.seal-slot {
+width: 38px;
+height: 38px;
+display: grid;
+place-items: center;
+}
+.seal-circle {
+display: block;
+width: 22px;
+height: 22px;
+border-radius: 50%;
+border: 1px solid var(–rule);
+transition: border-color 0.2s, border-width 0.2s;
+}
+.item:not(.sealed) .seal-btn:hover .seal-circle,
+.item:not(.sealed) .seal-btn:focus-visible .seal-circle {
+border-color: var(–burgundy);
+border-width: 1.5px;
+}
+
+.item.sealed .item-name {
+color: var(–ink-faint);
+text-decoration: line-through;
+text-decoration-color: var(–gold-dark);
+text-decoration-thickness: 0.5px;
+}
+.item.sealed .item-qty { opacity: 0.5; }
+.item .wax {
+width: 38px;
+height: 38px;
+display: block;
+animation: pressSeal 0.55s cubic-bezier(0.22, 1.4, 0.36, 1) both;
+transform-origin: center;
+}
+@keyframes pressSeal {
+0%   { opacity: 0; transform: scale(2.2) rotate(-18deg); filter: blur(2px); }
+55%  { opacity: 1; transform: scale(0.92) rotate(-3deg); filter: blur(0); }
+100% { opacity: 1; transform: scale(1) rotate(-6deg); }
+}
+.item.sealed::after {
+content: “”;
+position: absolute;
+inset: 0;
+background: radial-gradient(circle at 12% 50%, rgba(224, 195, 120, 0.45) 0%, transparent 50%);
+opacity: 0;
+pointer-events: none;
+animation: shimmer 0.9s ease-out both;
+}
+@keyframes shimmer {
+0% { opacity: 0; }
+30% { opacity: 1; }
+100% { opacity: 0; }
+}
+
+.empty {
+text-align: center;
+padding: 30px 16px;
+color: var(–ink-faint);
+font-style: italic;
+font-family: ‘Cormorant Garamond’, serif;
+font-size: 1.15rem;
+list-style: none;
+}
+
+.clear-btn {
+display: block;
+margin: 0 auto;
+background: transparent;
+border: 0;
+color: var(–ink-faint);
+font-family: ‘EB Garamond’, serif;
+font-style: italic;
+font-size: 0.95rem;
+letter-spacing: 0.04em;
+cursor: pointer;
+padding: 8px 12px;
+border-radius: 1px;
+}
+.clear-btn:hover { color: var(–burgundy); }
+.clear-btn:focus-visible { outline: 2px solid var(–gold); outline-offset: 2px; }
+
+/* Settings page */
+.settings-list {
+list-style: none;
+margin: 0 0 32px;
+padding: 0;
+border-top: 0.5px solid var(–rule);
+}
+.settings-row {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 16px;
+padding: 18px 4px;
+border-bottom: 0.5px dashed var(–rule);
+}
+.settings-row:last-child { border-bottom: 0; }
+.settings-label { flex: 1; }
+.settings-name {
+display: block;
+font-family: ‘Cormorant Garamond’, serif;
+font-size: 1.25rem;
+color: var(–ink);
+}
+.settings-desc {
+display: block;
+font-family: ‘EB Garamond’, serif;
+font-style: italic;
+font-size: 0.9rem;
+color: var(–ink-faint);
+margin-top: 2px;
+}
+
+/* Toggle switch */
+.toggle {
+position: relative;
+width: 48px; height: 26px;
+flex: 0 0 48px;
+}
+.toggle input {
+position: absolute;
+width: 100%; height: 100%;
+margin: 0; opacity: 0;
+cursor: pointer; z-index: 2;
+}
+.toggle .track {
+position: absolute;
+inset: 0;
+background: transparent;
+border: 0.5px solid var(–rule);
+border-radius: 13px;
+transition: background 0.25s, border-color 0.25s;
+}
+.toggle .knob {
+position: absolute;
+top: 3px; left: 3px;
+width: 18px; height: 18px;
+border-radius: 50%;
+background: var(–ink-faint);
+transition: transform 0.25s cubic-bezier(0.4, 0.1, 0.4, 1.2), background 0.25s;
+}
+.toggle input:checked ~ .track {
+background: var(–burgundy);
+border-color: var(–burgundy);
+}
+.toggle input:checked ~ .knob {
+transform: translateX(22px);
+background: var(–gold-light);
+}
+.toggle input:focus-visible ~ .track {
+outline: 2px solid var(–gold);
+outline-offset: 2px;
+}
+
+.reset-btn {
+background: transparent;
+border: 0.5px solid var(–burgundy);
+color: var(–burgundy);
+font-family: ‘Cormorant Garamond’, serif;
+font-style: italic;
+font-size: 1rem;
+padding: 8px 16px;
+cursor: pointer;
+border-radius: 1px;
+letter-spacing: 0.04em;
+transition: all 0.2s;
+}
+.reset-btn:hover { background: var(–burgundy); color: var(–paper); }
+.reset-btn:focus-visible { outline: 2px solid var(–gold); outline-offset: 2px; }
+
+.colophon {
+margin: 32px 0 0;
+text-align: center;
+font-size: 0.78rem;
+color: var(–ink-faint);
+font-style: italic;
+letter-spacing: 0.08em;
+}
+
+/* Settings: section headings */
+.settings-section-title {
+font-family: ‘Cormorant Garamond’, serif;
+font-weight: 500;
+font-style: italic;
+font-size: 1.15rem;
+color: var(–ink-faint);
+margin: 28px 0 10px;
+letter-spacing: 0.06em;
+text-transform: lowercase;
+border-bottom: 0.5px solid var(–rule);
+padding-bottom: 6px;
+}
+.settings-section-note {
+font-family: ‘EB Garamond’, serif;
+font-style: italic;
+font-size: 0.92rem;
+color: var(–ink-soft);
+margin: 0 0 14px;
+line-height: 1.5;
+}
+
+/* Settings: lists section */
+.settings-lists {
+list-style: none;
+margin: 0 0 12px;
+padding: 0;
+}
+.settings-list-row {
+display: flex;
+align-items: center;
+gap: 14px;
+padding: 12px 4px;
+border-bottom: 0.5px dashed var(–rule);
+}
+.settings-list-row:last-child { border-bottom: 0; }
+.settings-list-info {
+flex: 1;
+min-width: 0;
+}
+.settings-list-name {
+display: block;
+font-family: ‘Cormorant Garamond’, serif;
+font-size: 1.2rem;
+color: var(–ink);
+line-height: 1.2;
+}
+.settings-list-count {
+display: block;
+font-family: ‘EB Garamond’, serif;
+font-style: italic;
+font-size: 0.85rem;
+color: var(–ink-faint);
+margin-top: 2px;
+}
+.settings-delete-btn {
+flex: 0 0 auto;
+background: transparent;
+border: 0.5px solid var(–rule);
+color: var(–ink-faint);
+font-family: ‘EB Garamond’, serif;
+font-style: italic;
+font-size: 0.9rem;
+padding: 6px 12px;
+cursor: pointer;
+border-radius: 1px;
+transition: all 0.2s;
+}
+.settings-delete-btn:hover {
+color: var(–burgundy);
+border-color: var(–burgundy);
+}
+.settings-delete-btn:focus-visible { outline: 2px solid var(–gold); outline-offset: 2px; }
+
+/* Add a new list — toggle button + collapsible form (mirrors Inscribe) */
+.settings-add-btn {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 12px;
+width: 100%;
+background: transparent;
+border: 0;
+padding: 10px 4px;
+cursor: pointer;
+color: var(–burgundy);
+font-family: ‘EB Garamond’, serif;
+font-style: italic;
+font-size: 1rem;
+border-radius: 1px;
+transition: background 0.15s;
+}
+.settings-add-btn:hover { background: rgba(184, 146, 63, 0.06); }
+.settings-add-btn:focus-visible { outline: 2px solid var(–gold); outline-offset: 2px; }
+.settings-add-mark {
+font-size: 1.4rem;
+color: var(–gold);
+line-height: 1;
+font-weight: 500;
+}
+.add-list-form {
+margin-top: 10px;
+padding: 14px 4px 18px;
+border-top: 0.5px solid var(–rule);
+border-bottom: 0.5px solid var(–rule);
+}
+
+/* Backup actions */
+.settings-backup {
+display: flex;
+flex-direction: column;
+gap: 10px;
+margin: 8px 0 4px;
+}
+.settings-action-btn {
+width: 100%;
+background: transparent;
+border: 0.5px solid var(–rule);
+color: var(–ink);
+font-family: ‘EB Garamond’, serif;
+font-style: italic;
+font-size: 1rem;
+padding: 12px 16px;
+cursor: pointer;
+border-radius: 1px;
+transition: all 0.2s;
+letter-spacing: 0.02em;
+}
+.settings-action-btn:hover {
+border-color: var(–burgundy);
+color: var(–burgundy);
+background: rgba(184, 146, 63, 0.04);
+}
+.settings-action-btn:focus-visible { outline: 2px solid var(–gold); outline-offset: 2px; }
+
+/* Book cover */
+.book-stage {
+position: fixed;
+inset: 0;
+z-index: 100;
+perspective: 1800px;
+perspective-origin: 50% 35%;
+}
+.cover {
+position: absolute;
+inset: 0;
+width: 100%; height: 100%;
+border: 0; margin: 0; padding: 0;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+color: var(–gold-light);
+font-family: inherit;
+background:
+radial-gradient(ellipse at 30% 18%, rgba(255,210,160,0.06) 0%, transparent 60%),
+radial-gradient(ellipse at 75% 88%, rgba(0,0,0,0.32) 0%, transparent 55%),
+linear-gradient(140deg, #5a1620 0%, #4a1018 50%, #3a0c14 100%);
+box-shadow:
+inset 0 0 80px rgba(0,0,0,0.5),
+0 0 30px rgba(0,0,0,0.4);
+transform-origin: 0% 50%;
+transform: rotateY(0deg);
+transition: transform 1.4s cubic-bezier(0.65, 0.02, 0.3, 1);
+will-change: transform;
+}
+.cover::before {
+content: “”;
+position: absolute;
+inset: 0;
+pointer-events: none;
+background-image: url(“data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.45 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>”);
+opacity: 0.55;
+mix-blend-mode: overlay;
+}
+.cover.opening { transform: rotateY(-165deg); }
+.cover-frame {
+position: relative;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+width: min(82%, 420px);
+height: min(82%, 76vh);
+border: 1.5px solid rgba(212, 181, 104, 0.6);
+padding: 32px 22px 64px;
+text-align: center;
+}
+.cover-frame::before {
+content: “”;
+position: absolute;
+inset: 9px;
+border: 0.5px solid rgba(212, 181, 104, 0.42);
+pointer-events: none;
+}
+.cover-crown {
+width: 72px; height: auto;
+margin-bottom: 24px;
+color: #d4b568;
+filter: drop-shadow(0 1px 0 rgba(20,5,8,0.45));
+}
+.cover-title {
+display: block;
+font-family: ‘Cormorant Garamond’, serif;
+font-weight: 500;
+font-size: clamp(2rem, 7.6vw, 3rem);
+letter-spacing: 0.02em;
+color: #e0c378;
+text-shadow: 0 1px 0 rgba(20,5,8,0.7);
+line-height: 1.05;
+margin: 0 0 14px;
+}
+.cover-sub {
+display: block;
+font-family: ‘EB Garamond’, serif;
+font-style: italic;
+color: rgba(212, 181, 104, 0.72);
+font-size: 1rem;
+letter-spacing: 0.04em;
+}
+.cover-prompt {
+position: absolute;
+bottom: 32px;
+left: 0; right: 0;
+font-family: ‘EB Garamond’, serif;
+font-style: italic;
+font-size: 0.78rem;
+letter-spacing: 0.22em;
+text-transform: lowercase;
+color: rgba(212, 181, 104, 0.5);
+animation: prompt-breathe 2.6s ease-in-out infinite;
+}
+@keyframes prompt-breathe {
+0%, 100% { opacity: 0.4; }
+50% { opacity: 0.85; }
+}
+.cover:focus-visible { outline: none; }
+.cover:focus-visible .cover-frame {
+outline: 2px solid var(–gold);
+outline-offset: 0;
+}
+
+.vh {
+position: absolute;
+width: 1px; height: 1px;
+padding: 0; margin: -1px;
+overflow: hidden;
+clip: rect(0,0,0,0);
+white-space: nowrap;
+border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+*, *::before, *::after {
+animation-duration: 0.01ms !important;
+transition-duration: 0.01ms !important;
+}
+.cover { transition: opacity 0.2s !important; }
+.cover.opening { transform: none !important; opacity: 0; }
+}
+</style>
+
+</head>
+<body class="book-closed">
+
+<div class="book-stage" id="book-stage">
+  <button class="cover" id="open-btn" type="button">
+    <span class="cover-frame">
+      <svg class="cover-crown" viewBox="0 0 60 36" aria-hidden="true">
+        <g fill="currentColor">
+          <path d="M10 28 L14 12 L20 18 L30 5 L40 18 L46 12 L50 28 Z"/>
+          <rect x="9.5" y="28" width="41" height="3.2"/>
+          <circle cx="14" cy="12" r="2"/>
+          <circle cx="30" cy="5" r="2.4"/>
+          <circle cx="46" cy="12" r="2"/>
+        </g>
+      </svg>
+      <span class="cover-title">The Royal Ledger</span>
+      <span class="cover-sub">A book of provisions &amp; decrees</span>
+      <span class="cover-prompt">tap to open</span>
+    </span>
+  </button>
+</div>
+
+<main class="ledger" id="ledger" aria-hidden="true" inert>
+
+  <div id="status" role="status" aria-live="polite" class="vh"></div>
+
+  <!-- Contents page -->
+
+  <section class="page" id="page-contents" role="region" aria-labelledby="contents-title">
+    <header class="masthead">
+      <h1 id="contents-title" tabindex="-1">The Royal Ledger</h1>
+      <p class="subtitle">A book of provisions &amp; decrees</p>
+      <svg class="flourish" viewBox="0 0 280 14" aria-hidden="true">
+        <line x1="10" y1="7" x2="120" y2="7" stroke="currentColor" stroke-width="0.6"/>
+        <path d="M120,7 L130,2 L140,7 L130,12 Z" fill="currentColor"/>
+        <circle cx="130" cy="7" r="1.4" fill="#b8923f"/>
+        <line x1="140" y1="7" x2="270" y2="7" stroke="currentColor" stroke-width="0.6"/>
+      </svg>
+    </header>
+
+```
+<p class="contents-heading">table of contents</p>
+<ul class="contents-list" id="contents-list" role="list"></ul>
+```
+
+  </section>
+
+  <!-- Household page (one element, populated dynamically) -->
+
+  <section class="page" id="page-household" role="region" aria-labelledby="household-title" hidden>
+    <button class="back-btn" type="button" data-goto="contents">
+      <svg class="back-arrow" viewBox="0 0 8 12" aria-hidden="true">
+        <path d="M6.5 1 L1.5 6 L6.5 11" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Contents</span>
+    </button>
+
+```
+<header class="page-head">
+  <span class="page-dropcap" aria-hidden="true" id="household-cap">P</span>
+  <h2 class="page-title" id="household-title" tabindex="-1">The Pantry</h2>
+</header>
+
+<section class="inscribe">
+  <button id="open-inscribe" class="inscribe-toggle" type="button">
+    <span class="inscribe-toggle-mark" aria-hidden="true">+</span>
+    <span>Inscribe a new entry</span>
+  </button>
+
+  <div id="inscribe-form" hidden>
+    <div class="inscribe-grid">
+      <div class="row-double">
+        <div class="field">
+          <label for="item-name">item</label>
+          <input id="item-name" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="next" placeholder="lemons, claret&hellip;">
+        </div>
+        <div class="field">
+          <label for="item-qty">quantity</label>
+          <input id="item-qty" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="a dozen">
+        </div>
+      </div>
+      <div class="inscribe-actions">
+        <button id="add-btn" class="inscribe-btn" type="button">
+          <svg class="ornament" viewBox="0 0 8 8" aria-hidden="true"><path d="M4 0 L8 4 L4 8 L0 4 Z"/></svg>
+          <span>Inscribe</span>
+          <svg class="ornament" viewBox="0 0 8 8" aria-hidden="true"><path d="M4 0 L8 4 L4 8 L0 4 Z"/></svg>
+        </button>
+        <button id="close-inscribe" class="inscribe-done" type="button">Done</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ul class="items" id="household-items" role="list"></ul>
+
+<button id="clear-btn" class="clear-btn" type="button" hidden>Sweep away sealed entries</button>
+```
+
+  </section>
+
+  <!-- Settings page -->
+
+  <section class="page" id="page-settings" role="region" aria-labelledby="settings-title" hidden>
+    <button class="back-btn" type="button" data-goto="contents">
+      <svg class="back-arrow" viewBox="0 0 8 12" aria-hidden="true">
+        <path d="M6.5 1 L1.5 6 L6.5 11" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Contents</span>
+    </button>
+
+```
+<header class="page-head">
+  <span class="page-dropcap" aria-hidden="true">&#x2731;</span>
+  <h2 class="page-title" id="settings-title" tabindex="-1">Settings</h2>
+</header>
+
+<details class="instructions">
+  <summary>How to use the ledger</summary>
+  <ol class="instr-list" role="list">
+    <li role="listitem"><em>Pick a list</em> &mdash; tap any entry on the Contents page; the book turns to its page.</li>
+    <li role="listitem"><em>Inscribe</em> &mdash; on a list page, tap &ldquo;Inscribe a new entry&rdquo;, name the item, note a quantity, then press Inscribe.</li>
+    <li role="listitem"><em>Seal</em> &mdash; tap an entry to stamp it with wax once you have it.</li>
+    <li role="listitem"><em>Unseal</em> &mdash; tap a sealed entry to undo the wax.</li>
+    <li role="listitem"><em>Erase</em> &mdash; tap the small &times; on the right of an entry to strike it from the ledger.</li>
+    <li role="listitem"><em>Sweep</em> &mdash; clear all sealed entries at once with the link at the foot of each list.</li>
+  </ol>
+</details>
+
+<h3 class="settings-section-title">Lists</h3>
+<ul class="settings-lists" id="settings-lists" role="list"></ul>
+<button id="add-list-btn" class="settings-add-btn" type="button">
+  <span class="settings-add-mark" aria-hidden="true">+</span>
+  <span>Add a new list</span>
+</button>
+<div id="add-list-form" class="add-list-form" hidden>
+  <div class="field">
+    <label for="new-list-name">name</label>
+    <input id="new-list-name" type="text" autocomplete="off" placeholder="The Stables, Workshop&hellip;">
+  </div>
+  <div class="inscribe-actions">
+    <button id="confirm-add-list" class="inscribe-btn" type="button">
+      <svg class="ornament" viewBox="0 0 8 8" aria-hidden="true"><path d="M4 0 L8 4 L4 8 L0 4 Z"/></svg>
+      <span>Add list</span>
+      <svg class="ornament" viewBox="0 0 8 8" aria-hidden="true"><path d="M4 0 L8 4 L4 8 L0 4 Z"/></svg>
+    </button>
+    <button id="cancel-add-list" class="inscribe-done" type="button">Cancel</button>
+  </div>
+</div>
+
+<h3 class="settings-section-title">Backup</h3>
+<p class="settings-section-note">A backup file holds every list and entry. Keep it safe; restore it on any device.</p>
+<div class="settings-backup">
+  <button id="export-btn" class="settings-action-btn" type="button">Download backup</button>
+  <button id="import-btn" class="settings-action-btn" type="button">Restore from file</button>
+  <input type="file" id="import-file" accept="application/json,.json" hidden>
+</div>
+
+<h3 class="settings-section-title">Preferences</h3>
+<ul class="settings-list" role="list">
+  <li class="settings-row" role="listitem">
+    <label class="settings-label" for="sound-toggle">
+      <span class="settings-name">Sound</span>
+      <span class="settings-desc">Quill scratch and wax-seal sounds.</span>
+    </label>
+    <span class="toggle">
+      <input id="sound-toggle" type="checkbox" checked>
+      <span class="track" aria-hidden="true"></span>
+      <span class="knob" aria-hidden="true"></span>
+    </span>
+  </li>
+  <li class="settings-row" role="listitem">
+    <label class="settings-label" for="motion-toggle">
+      <span class="settings-name">Page animations</span>
+      <span class="settings-desc">The book&rsquo;s flip when turning to a new page.</span>
+    </label>
+    <span class="toggle">
+      <input id="motion-toggle" type="checkbox" checked>
+      <span class="track" aria-hidden="true"></span>
+      <span class="knob" aria-hidden="true"></span>
+    </span>
+  </li>
+  <li class="settings-row" role="listitem">
+    <span class="settings-label">
+      <span class="settings-name">Reset the ledger</span>
+      <span class="settings-desc">Strike every entry from every list. Cannot be undone.</span>
+    </span>
+    <button id="reset-btn" class="reset-btn" type="button">Reset</button>
+  </li>
+</ul>
+
+<p class="colophon">By Her Majesty&rsquo;s pleasure</p>
+```
+
+  </section>
+
+</main>
+
+<template id="wax-template">
+  <svg class="wax" viewBox="0 0 60 60" aria-hidden="true">
+    <defs>
+      <radialGradient id="wax-grad" cx="38%" cy="32%" r="68%">
+        <stop offset="0%" stop-color="#a3262e"/>
+        <stop offset="55%" stop-color="#6b1f24"/>
+        <stop offset="100%" stop-color="#3a0e12"/>
+      </radialGradient>
+    </defs>
+    <path d="M30 4 C 38 3 45 7 48 13 C 54 14 58 19 57 25 C 60 30 57 36 53 39 C 54 45 50 51 44 52 C 41 57 34 58 28 56 C 22 58 15 56 12 51 C 6 50 3 44 5 38 C 1 33 3 26 7 23 C 7 17 11 13 17 12 C 20 6 25 4 30 4 Z"
+          fill="url(#wax-grad)"
+          stroke="#3a0e12" stroke-width="0.4"/>
+    <circle cx="30" cy="30" r="19" fill="none" stroke="#b8923f" stroke-width="0.5" opacity="0.5"/>
+    <g fill="#d4b568" opacity="0.9">
+      <path d="M22 20 L24 16 L26.5 18 L30 13.5 L33.5 18 L36 16 L38 20 Z"/>
+      <rect x="22" y="20" width="16" height="1.4"/>
+      <circle cx="24" cy="16" r="0.9"/>
+      <circle cx="30" cy="13.5" r="1.05"/>
+      <circle cx="36" cy="16" r="0.9"/>
+    </g>
+    <text class="wax-letter" x="30" y="44" text-anchor="middle"
+          font-family="'Cormorant Garamond', Georgia, serif"
+          font-style="italic"
+          font-weight="500"
+          font-size="22"
+          fill="#e0c378">P</text>
+  </svg>
+</template>
+
+<script>
+(function () {
+  'use strict';
+
+  // Default households on a fresh ledger; users can add/delete in Settings.
+  const DEFAULT_HOUSEHOLDS = [
+    { id: 'h_pantry',     name: 'The Pantry' },
+    { id: 'h_cellar',     name: 'The Cellar' },
+    { id: 'h_gardens',    name: 'The Gardens' },
+    { id: 'h_wardrobe',   name: 'The Wardrobe' },
+    { id: 'h_apothecary', name: 'The Apothecary' },
+    { id: 'h_sundries',   name: 'Sundries' }
+  ];
+
+  function getHousehold(id) {
+    return state.households.find(h => h.id === id) || null;
+  }
+  function householdLetter(name) {
+    const stripped = String(name || '').replace(/^The\s+/i, '').trim();
+    return (stripped.charAt(0) || '?').toUpperCase();
+  }
+  function newHouseholdId() {
+    return 'h_' + Math.random().toString(36).slice(2, 9);
+  }
+  function defaultHouseholdId() {
+    const sundries = state.households.find(h => h.name === 'Sundries');
+    return sundries ? sundries.id : (state.households[0] ? state.households[0].id : null);
+  }
+
+  // To persist on GitHub Pages, save state.items via localStorage.setItem
+  // and load on init. Skipped here so the artifact preview works.
+  const state = {
+    items: [],
+    households: DEFAULT_HOUSEHOLDS.slice(),
+    page: 'contents',
+    household: null,
+    prefs: { sound: true, animations: true }
+  };
+
+  const els = {
+    stage:          document.getElementById('book-stage'),
+    openBtn:        document.getElementById('open-btn'),
+    ledger:         document.getElementById('ledger'),
+    pages: {
+      contents:     document.getElementById('page-contents'),
+      household:    document.getElementById('page-household'),
+      settings:     document.getElementById('page-settings')
+    },
+    contentsList:   document.getElementById('contents-list'),
+    householdCap:   document.getElementById('household-cap'),
+    householdTitle: document.getElementById('household-title'),
+    name:           document.getElementById('item-name'),
+    qty:            document.getElementById('item-qty'),
+    addBtn:         document.getElementById('add-btn'),
+    openInscribe:   document.getElementById('open-inscribe'),
+    closeInscribe:  document.getElementById('close-inscribe'),
+    inscribeForm:   document.getElementById('inscribe-form'),
+    items:          document.getElementById('household-items'),
+    clearBtn:       document.getElementById('clear-btn'),
+    soundToggle:    document.getElementById('sound-toggle'),
+    motionToggle:   document.getElementById('motion-toggle'),
+    resetBtn:       document.getElementById('reset-btn'),
+    settingsLists:  document.getElementById('settings-lists'),
+    addListBtn:     document.getElementById('add-list-btn'),
+    addListForm:    document.getElementById('add-list-form'),
+    newListName:    document.getElementById('new-list-name'),
+    confirmAddList: document.getElementById('confirm-add-list'),
+    cancelAddList:  document.getElementById('cancel-add-list'),
+    exportBtn:      document.getElementById('export-btn'),
+    importBtn:      document.getElementById('import-btn'),
+    importFile:     document.getElementById('import-file'),
+    status:         document.getElementById('status'),
+    waxTpl:         document.getElementById('wax-template')
+  };
+
+  // ---------- Audio ----------
+  let actx = null;
+  function audio() {
+    if (!actx) {
+      try { actx = new (window.AudioContext || window.webkitAudioContext)(); }
+      catch (e) { actx = null; }
+    }
+    if (actx && actx.state === 'suspended') actx.resume();
+    return actx;
+  }
+
+  function playQuill() {
+    if (!state.prefs.sound) return;
+    const ctx = audio(); if (!ctx) return;
+    const t = ctx.currentTime;
+    const dur = 0.20;
+    const len = Math.floor(ctx.sampleRate * dur);
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) {
+      const norm = i / len;
+      // Fast attack, gradual decay — feels like a stroke
+      const env = Math.min(norm * 9, 1) * Math.pow(1 - norm, 1.3);
+      data[i] = (Math.random() * 2 - 1) * env;
+    }
+    const src = ctx.createBufferSource(); src.buffer = buf;
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.setValueAtTime(1800, t);
+    bp.frequency.linearRampToValueAtTime(3800, t + dur);
+    bp.Q.value = 3.5;
+    const hs = ctx.createBiquadFilter();
+    hs.type = 'highshelf';
+    hs.frequency.value = 4500;
+    hs.gain.value = 6;
+    const g = ctx.createGain();
+    g.gain.value = 0.32;
+    src.connect(bp).connect(hs).connect(g).connect(ctx.destination);
+    src.start(t);
+  }
+
+  function playSeal() {
+    if (!state.prefs.sound) return;
+    const ctx = audio(); if (!ctx) return;
+    const t = ctx.currentTime;
+
+    // 1. Sub thump — the impact
+    const thump = ctx.createOscillator();
+    thump.type = 'sine';
+    thump.frequency.setValueAtTime(115, t);
+    thump.frequency.exponentialRampToValueAtTime(38, t + 0.22);
+    const thumpG = ctx.createGain();
+    thumpG.gain.setValueAtTime(0, t);
+    thumpG.gain.linearRampToValueAtTime(0.50, t + 0.006);
+    thumpG.gain.exponentialRampToValueAtTime(0.001, t + 0.32);
+    thump.connect(thumpG).connect(ctx.destination);
+    thump.start(t); thump.stop(t + 0.34);
+
+    // 2. Press click — sharp transient
+    const clickDur = 0.08;
+    const clickLen = Math.floor(ctx.sampleRate * clickDur);
+    const clickBuf = ctx.createBuffer(1, clickLen, ctx.sampleRate);
+    const clickData = clickBuf.getChannelData(0);
+    for (let i = 0; i < clickLen; i++) {
+      clickData[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.014));
+    }
+    const click = ctx.createBufferSource(); click.buffer = clickBuf;
+    const clickF = ctx.createBiquadFilter();
+    clickF.type = 'lowpass'; clickF.frequency.value = 1100;
+    const clickG = ctx.createGain(); clickG.gain.value = 0.32;
+    click.connect(clickF).connect(clickG).connect(ctx.destination);
+    click.start(t);
+
+    // 3. Wax body — midrange resonance settling
+    const body = ctx.createOscillator();
+    body.type = 'triangle';
+    body.frequency.setValueAtTime(220, t);
+    body.frequency.exponentialRampToValueAtTime(95, t + 0.40);
+    const bodyG = ctx.createGain();
+    bodyG.gain.setValueAtTime(0, t);
+    bodyG.gain.linearRampToValueAtTime(0.11, t + 0.02);
+    bodyG.gain.exponentialRampToValueAtTime(0.001, t + 0.50);
+    body.connect(bodyG).connect(ctx.destination);
+    body.start(t); body.stop(t + 0.55);
+
+    // 4. Gold shimmer — bright tail
+    const sh = ctx.createOscillator();
+    sh.type = 'triangle';
+    sh.frequency.setValueAtTime(2600, t + 0.10);
+    sh.frequency.linearRampToValueAtTime(3800, t + 0.50);
+    const sg = ctx.createGain();
+    sg.gain.setValueAtTime(0, t + 0.10);
+    sg.gain.linearRampToValueAtTime(0.06, t + 0.18);
+    sg.gain.exponentialRampToValueAtTime(0.0005, t + 0.60);
+    sh.connect(sg).connect(ctx.destination);
+    sh.start(t + 0.10); sh.stop(t + 0.65);
+  }
+
+  // ---------- Helpers ----------
+  function uid() { return 'i' + Math.random().toString(36).slice(2, 9); }
+  function announce(msg) {
+    els.status.textContent = '';
+    setTimeout(() => { els.status.textContent = msg; }, 30);
+  }
+
+  // ---------- Item operations ----------
+  function add(name, qty, cat) {
+    const trimmed = name.trim();
+    if (!trimmed) return false;
+    state.items.push({
+      id: uid(),
+      name: trimmed,
+      qty: qty.trim(),
+      cat: getHousehold(cat) ? cat : defaultHouseholdId(),
+      sealed: false
+    });
+    return true;
+  }
+  function seal(id) {
+    const item = state.items.find(i => i.id === id);
+    if (!item || item.sealed) return;
+    item.sealed = true;
+  }
+  function clearSealedIn(cat) {
+    state.items = state.items.filter(i => !(i.cat === cat && i.sealed));
+  }
+  function countIn(cat) { return state.items.filter(i => i.cat === cat).length; }
+  function sealedIn(cat) { return state.items.some(i => i.cat === cat && i.sealed); }
+
+  // ---------- Render ----------
+  function renderContents() {
+    els.contentsList.innerHTML = '';
+    for (const h of state.households) {
+      const li = document.createElement('li');
+      li.className = 'contents-entry';
+      li.setAttribute('role', 'listitem');
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'contents-btn';
+      btn.dataset.goto = 'household';
+      btn.dataset.household = h.id;
+
+      const cap = document.createElement('span');
+      cap.className = 'contents-cap';
+      cap.setAttribute('aria-hidden', 'true');
+      cap.textContent = householdLetter(h.name);
+
+      const name = document.createElement('span');
+      name.className = 'contents-name';
+      name.setAttribute('aria-hidden', 'true');
+      name.textContent = h.name;
+
+      const dots = document.createElement('span');
+      dots.className = 'contents-dots';
+      dots.setAttribute('aria-hidden', 'true');
+
+      const count = document.createElement('span');
+      count.className = 'contents-count';
+      count.setAttribute('aria-hidden', 'true');
+      const n = countIn(h.id);
+      if (n === 0) {
+        count.classList.add('empty');
+        count.textContent = '\u2014';
+      } else {
+        count.textContent = String(n);
+      }
+      btn.setAttribute('aria-label',
+        h.name + ', ' + n + ' ' + (n === 1 ? 'entry' : 'entries'));
+
+      btn.appendChild(cap);
+      btn.appendChild(name);
+      btn.appendChild(dots);
+      btn.appendChild(count);
+      li.appendChild(btn);
+      els.contentsList.appendChild(li);
+    }
+
+    const sli = document.createElement('li');
+    sli.className = 'contents-entry contents-settings';
+    sli.setAttribute('role', 'listitem');
+
+    const sbtn = document.createElement('button');
+    sbtn.type = 'button';
+    sbtn.className = 'contents-btn';
+    sbtn.dataset.goto = 'settings';
+    sbtn.setAttribute('aria-label', 'Settings');
+
+    const scap = document.createElement('span');
+    scap.className = 'contents-cap';
+    scap.setAttribute('aria-hidden', 'true');
+    scap.textContent = '\u2731';
+
+    const sname = document.createElement('span');
+    sname.className = 'contents-name';
+    sname.setAttribute('aria-hidden', 'true');
+    sname.textContent = 'Settings';
+
+    sbtn.appendChild(scap);
+    sbtn.appendChild(sname);
+    sli.appendChild(sbtn);
+    els.contentsList.appendChild(sli);
+  }
+
+  function renderHousehold(id) {
+    let h = getHousehold(id);
+    if (!h) {
+      // Stale id: fall back to first household, or bail to contents.
+      if (state.households.length > 0) {
+        h = state.households[0];
+      } else {
+        goTo('contents');
+        return;
+      }
+    }
+    state.household = h.id;
+
+    els.householdCap.textContent = householdLetter(h.name);
+    els.householdTitle.textContent = h.name;
+
+    els.items.innerHTML = '';
+    const list = state.items.filter(i => i.cat === h.id);
+
+    if (list.length === 0) {
+      const e = document.createElement('li');
+      e.className = 'empty';
+      e.setAttribute('role', 'listitem');
+      e.textContent = 'No entries yet for ' + h.name + '.';
+      els.items.appendChild(e);
+    } else {
+      for (const it of list) {
+        const li = document.createElement('li');
+        li.className = 'item' + (it.sealed ? ' sealed' : '');
+        li.dataset.id = it.id;
+        li.setAttribute('role', 'listitem');
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'seal-btn';
+        btn.setAttribute('aria-label',
+          (it.sealed ? 'Unseal ' : 'Seal ') + it.name +
+          (it.qty ? ', ' + it.qty : '') +
+          (it.sealed ? ', currently sealed' : ''));
+        btn.addEventListener('click',
+          () => it.sealed ? onUnsealItem(it.id) : onSealItem(it.id));
+
+        const slot = document.createElement('span');
+        slot.className = 'seal-slot';
+        slot.setAttribute('aria-hidden', 'true');
+        if (it.sealed) {
+          const wax = els.waxTpl.content.firstElementChild.cloneNode(true);
+          const letter = wax.querySelector('.wax-letter');
+          const itemH = getHousehold(it.cat);
+          if (letter) letter.textContent = itemH ? householdLetter(itemH.name) : '?';
+          slot.appendChild(wax);
+        } else {
+          const circle = document.createElement('span');
+          circle.className = 'seal-circle';
+          circle.setAttribute('aria-hidden', 'true');
+          slot.appendChild(circle);
+        }
+        btn.appendChild(slot);
+
+        const nameEl = document.createElement('span');
+        nameEl.className = 'item-name';
+        nameEl.setAttribute('aria-hidden', 'true');
+        nameEl.textContent = it.name;
+        btn.appendChild(nameEl);
+
+        const qtyEl = document.createElement('span');
+        qtyEl.className = 'item-qty';
+        qtyEl.setAttribute('aria-hidden', 'true');
+        qtyEl.textContent = it.qty || '';
+        btn.appendChild(qtyEl);
+
+        li.appendChild(btn);
+
+        // Erase × on every row, sealed or not
+        const eraseBtn = document.createElement('button');
+        eraseBtn.type = 'button';
+        eraseBtn.className = 'erase-btn';
+        eraseBtn.setAttribute('aria-label',
+          'Erase ' + it.name + (it.qty ? ', ' + it.qty : ''));
+        eraseBtn.innerHTML =
+          '<svg class="erase-icon" viewBox="0 0 14 14" aria-hidden="true">' +
+          '<path d="M2 2 L12 12 M12 2 L2 12" stroke="currentColor" ' +
+          'stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>';
+        eraseBtn.addEventListener('click', () => onEraseItem(it.id));
+        li.appendChild(eraseBtn);
+
+        els.items.appendChild(li);
+      }
+    }
+
+    els.clearBtn.hidden = !sealedIn(h.id);
+  }
+
+  function renderSettings() {
+    els.soundToggle.checked = state.prefs.sound;
+    els.motionToggle.checked = state.prefs.animations;
+    renderSettingsLists();
+    // Reset add-list form to collapsed state
+    if (els.addListForm) els.addListForm.hidden = true;
+    if (els.addListBtn) els.addListBtn.hidden = false;
+    if (els.newListName) els.newListName.value = '';
+  }
+
+  function renderSettingsLists() {
+    els.settingsLists.innerHTML = '';
+    for (const h of state.households) {
+      const li = document.createElement('li');
+      li.className = 'settings-list-row';
+      li.setAttribute('role', 'listitem');
+
+      const info = document.createElement('div');
+      info.className = 'settings-list-info';
+
+      const name = document.createElement('span');
+      name.className = 'settings-list-name';
+      name.textContent = h.name;
+      info.appendChild(name);
+
+      const n = countIn(h.id);
+      const count = document.createElement('span');
+      count.className = 'settings-list-count';
+      count.textContent = n + ' ' + (n === 1 ? 'entry' : 'entries');
+      info.appendChild(count);
+
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'settings-delete-btn';
+      del.textContent = 'Delete';
+      del.setAttribute('aria-label',
+        'Delete list ' + h.name + ', ' + n + ' ' + (n === 1 ? 'entry' : 'entries'));
+      del.addEventListener('click', () => onDeleteList(h.id));
+
+      li.appendChild(info);
+      li.appendChild(del);
+      els.settingsLists.appendChild(li);
+    }
+  }
+
+  // ---------- Navigation ----------
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  function goTo(target, household) {
+    if (target === state.page &&
+        (target !== 'household' || household === state.household)) return;
+
+    const fromPage = els.pages[state.page];
+    const toPage   = els.pages[target];
+    if (!toPage) return;
+
+    const transition = () => {
+      if (fromPage) {
+        fromPage.classList.remove('flipping-out');
+        fromPage.hidden = true;
+      }
+      toPage.hidden = false;
+      state.page = target;
+      if (target === 'contents')  renderContents();
+      if (target === 'household') { resetInscribe(); renderHousehold(household); }
+      if (target === 'settings')  renderSettings();
+      toPage.classList.add('flipping-in');
+      const heading = toPage.querySelector('h1, h2');
+      if (heading) heading.focus({ preventScroll: true });
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      setTimeout(() => toPage.classList.remove('flipping-in'), 600);
+    };
+
+    if (state.prefs.animations && !reducedMotion.matches) {
+      fromPage.classList.add('flipping-out');
+      setTimeout(transition, 240);
+    } else {
+      transition();
+    }
+  }
+
+  // ---------- Cover ----------
+  function openBook() {
+    if (els.openBtn.dataset.opened) return;
+    els.openBtn.dataset.opened = '1';
+
+    els.openBtn.classList.add('opening');
+    els.ledger.removeAttribute('aria-hidden');
+    els.ledger.removeAttribute('inert');
+    document.body.classList.remove('book-closed');
+    els.openBtn.setAttribute('inert', '');
+    els.openBtn.setAttribute('aria-hidden', 'true');
+
+    // Prime the AudioContext on this user gesture so quill/seal sounds
+    // are guaranteed to play on iOS.
+    audio();
+
+    renderContents();
+    const heading = els.pages.contents.querySelector('h1');
+    if (heading) heading.focus({ preventScroll: true });
+
+    setTimeout(() => { els.stage.style.display = 'none'; }, 1500);
+  }
+
+  // ---------- Handlers ----------
+  function onAddItem() {
+    if (!els.name.value.trim()) { els.name.focus(); return; }
+    const cat = state.household;
+    const name = els.name.value.trim();
+    const qty = els.qty.value.trim();
+    add(name, qty, cat);
+    playQuill();
+    announce('Inscribed: ' + name + (qty ? ', ' + qty : '') + '.');
+    els.name.value = '';
+    els.qty.value = '';
+    renderHousehold(cat);
+    els.name.focus();
+  }
+  function onSealItem(id) {
+    const item = state.items.find(i => i.id === id);
+    if (!item) return;
+
+    seal(id);
+    playSeal();
+    announce('Sealed: ' + (item.qty ? item.qty + ' ' : '') + item.name + '.');
+    renderHousehold(state.household);
+
+    // Stay on the same row, now showing "Unseal …".
+    const btn = els.items.querySelector('[data-id="' + id + '"] .seal-btn');
+    if (btn) btn.focus();
+  }
+  function onUnsealItem(id) {
+    const item = state.items.find(i => i.id === id);
+    if (!item || !item.sealed) return;
+    item.sealed = false;
+    announce('Unsealed: ' + (item.qty ? item.qty + ' ' : '') + item.name + '.');
+    renderHousehold(state.household);
+    // Stay on the same row, now showing "Seal …".
+    const btn = els.items.querySelector('[data-id="' + id + '"] .seal-btn');
+    if (btn) btn.focus();
+  }
+  function onEraseItem(id) {
+    const item = state.items.find(i => i.id === id);
+    if (!item) return;
+    const cat = state.household;
+
+    // Snapshot index for focus restoration
+    const before = state.items.filter(i => i.cat === cat);
+    const idx = before.findIndex(i => i.id === id);
+
+    state.items = state.items.filter(i => i.id !== id);
+    announce('Erased: ' + (item.qty ? item.qty + ' ' : '') + item.name + '.');
+    renderHousehold(cat);
+
+    // Move focus: next remaining row, or sweep, or name input
+    const after = state.items.filter(i => i.cat === cat);
+    if (after.length > 0) {
+      const nextId = after[Math.min(idx, after.length - 1)].id;
+      const nextBtn = els.items.querySelector('[data-id="' + nextId + '"] .seal-btn');
+      if (nextBtn) { nextBtn.focus(); return; }
+    }
+    if (!els.clearBtn.hidden) { els.clearBtn.focus(); return; }
+    els.name.focus();
+  }
+  function onClearSealed() {
+    const cat = state.household;
+    const n = state.items.filter(i => i.cat === cat && i.sealed).length;
+    if (n === 0) return;
+    clearSealedIn(cat);
+    const h = getHousehold(cat);
+    announce(n + ' sealed ' + (n === 1 ? 'entry' : 'entries') + ' swept from ' + (h ? h.name : 'the list') + '.');
+    renderHousehold(cat);
+    els.name.focus();
+  }
+  function onToggleSound() {
+    state.prefs.sound = els.soundToggle.checked;
+    announce('Sound ' + (state.prefs.sound ? 'on' : 'off') + '.');
+  }
+  function onToggleMotion() {
+    state.prefs.animations = els.motionToggle.checked;
+    announce('Page animations ' + (state.prefs.animations ? 'on' : 'off') + '.');
+  }
+  function onReset() {
+    const ok = window.confirm('Strike every entry from every household? This cannot be undone.');
+    if (!ok) return;
+    state.items = [];
+    announce('The ledger has been reset.');
+    goTo('contents');
+  }
+
+  // ---------- Lists in Settings ----------
+  function onOpenAddList() {
+    els.addListBtn.hidden = true;
+    els.addListForm.hidden = false;
+    els.newListName.value = '';
+    els.newListName.focus();
+  }
+  function onCancelAddList() {
+    els.addListForm.hidden = true;
+    els.addListBtn.hidden = false;
+    els.newListName.value = '';
+    els.addListBtn.focus();
+  }
+  function onConfirmAddList() {
+    const raw = els.newListName.value.trim();
+    if (!raw) { els.newListName.focus(); return; }
+    // Reject duplicate names (case-insensitive)
+    const exists = state.households.some(h =>
+      h.name.toLowerCase() === raw.toLowerCase());
+    if (exists) {
+      announce('A list named ' + raw + ' already exists.');
+      els.newListName.focus();
+      return;
+    }
+    const h = { id: newHouseholdId(), name: raw };
+    state.households.push(h);
+    announce('Added list: ' + raw + '.');
+    onCancelAddList(); // collapse the form
+    renderSettingsLists();
+  }
+  function onDeleteList(id) {
+    const h = getHousehold(id);
+    if (!h) return;
+    const itemCount = state.items.filter(i => i.cat === id).length;
+    const msg = itemCount > 0
+      ? 'Delete ' + h.name + '? This will also strike its ' + itemCount +
+        ' ' + (itemCount === 1 ? 'entry' : 'entries') + '.'
+      : 'Delete ' + h.name + '?';
+    if (!window.confirm(msg)) return;
+    state.households = state.households.filter(x => x.id !== id);
+    state.items = state.items.filter(i => i.cat !== id);
+    if (state.household === id) state.household = null;
+    announce('Deleted list: ' + h.name + '.');
+    renderSettingsLists();
+  }
+
+  // ---------- Backup ----------
+  function onExport() {
+    const data = {
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      households: state.households,
+      items: state.items
+    };
+    try {
+      const json = JSON.stringify(data, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const stamp = new Date().toISOString().slice(0, 10);
+      a.download = 'royal-ledger-' + stamp + '.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+      announce('Backup downloaded.');
+    } catch (e) {
+      announce('Could not create backup file.');
+    }
+  }
+  function onImportClick() {
+    els.importFile.value = '';
+    els.importFile.click();
+  }
+  function onImportFile(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function (ev) {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if (!data || !Array.isArray(data.households) || !Array.isArray(data.items)) {
+          throw new Error('Invalid backup');
+        }
+        // Sanity-check each household and item
+        const households = data.households
+          .filter(h => h && typeof h.id === 'string' && typeof h.name === 'string')
+          .map(h => ({ id: h.id, name: h.name }));
+        const items = data.items
+          .filter(i => i && typeof i.id === 'string' && typeof i.name === 'string'
+                  && typeof i.cat === 'string')
+          .map(i => ({
+            id: i.id,
+            name: i.name,
+            qty: typeof i.qty === 'string' ? i.qty : '',
+            cat: i.cat,
+            sealed: !!i.sealed
+          }));
+        if (households.length === 0) throw new Error('Backup has no lists');
+        const ok = window.confirm(
+          'Restore from this backup? It will replace your current ledger (' +
+          households.length + ' ' + (households.length === 1 ? 'list' : 'lists') +
+          ', ' + items.length + ' ' + (items.length === 1 ? 'entry' : 'entries') + ').'
+        );
+        if (!ok) return;
+        state.households = households;
+        state.items = items;
+        state.household = null;
+        announce('Ledger restored from backup.');
+        renderSettings();
+      } catch (err) {
+        announce('Could not read that file as a ledger backup.');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function openInscribe() {
+    els.openInscribe.hidden = true;
+    els.inscribeForm.hidden = false;
+    els.name.focus();
+  }
+  function closeInscribe() {
+    els.inscribeForm.hidden = true;
+    els.openInscribe.hidden = false;
+    els.name.value = '';
+    els.qty.value = '';
+    els.openInscribe.focus();
+  }
+  // Silent variant called from renderHousehold — no focus shift, no announce
+  function resetInscribe() {
+    els.inscribeForm.hidden = true;
+    els.openInscribe.hidden = false;
+    els.name.value = '';
+    els.qty.value = '';
+  }
+
+  // ---------- Wire up ----------
+  els.openBtn.addEventListener('click', openBook);
+  els.addBtn.addEventListener('click', onAddItem);
+  els.openInscribe.addEventListener('click', openInscribe);
+  els.closeInscribe.addEventListener('click', closeInscribe);
+  els.name.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); els.qty.focus(); }
+  });
+  els.qty.addEventListener('keydown', e => { if (e.key === 'Enter') onAddItem(); });
+  els.clearBtn.addEventListener('click', onClearSealed);
+  els.soundToggle.addEventListener('change', onToggleSound);
+  els.motionToggle.addEventListener('change', onToggleMotion);
+  els.resetBtn.addEventListener('click', onReset);
+  els.addListBtn.addEventListener('click', onOpenAddList);
+  els.cancelAddList.addEventListener('click', onCancelAddList);
+  els.confirmAddList.addEventListener('click', onConfirmAddList);
+  els.newListName.addEventListener('keydown', e => { if (e.key === 'Enter') onConfirmAddList(); });
+  els.exportBtn.addEventListener('click', onExport);
+  els.importBtn.addEventListener('click', onImportClick);
+  els.importFile.addEventListener('change', onImportFile);
+
+  // Generic data-goto handler for back buttons + contents-list buttons
+  document.addEventListener('click', e => {
+    const trigger = e.target.closest('[data-goto]');
+    if (!trigger) return;
+    const target = trigger.dataset.goto;
+    const household = trigger.dataset.household;
+    goTo(target, household);
+  });
+
+  renderContents();
+})();
+</script>
+
+</body>
+</html>
