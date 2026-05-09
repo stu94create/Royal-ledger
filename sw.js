@@ -1,4 +1,4 @@
-const VERSION = 'royal-ledger-v2';
+const VERSION = 'royal-ledger-v3';
 
 const SHELL = [
   './',
