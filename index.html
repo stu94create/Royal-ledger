@@ -29,9 +29,9 @@
 
 html, body {
 margin: 0; padding: 0;
-background: var(–paper);
-color: var(–ink);
-font-family: ‘EB Garamond’, Georgia, serif;
+background: var(--paper);
+color: var(--ink);
+font-family: 'EB Garamond', Georgia, serif;
 font-size: 18px;
 line-height: 1.55;
 -webkit-font-smoothing: antialiased;
@@ -41,16 +41,16 @@ body {
 background:
 radial-gradient(ellipse at 20% 10%, rgba(255,245,210,0.6) 0%, transparent 60%),
 radial-gradient(ellipse at 80% 90%, rgba(180,140,80,0.10) 0%, transparent 55%),
-radial-gradient(ellipse at 50% 50%, var(–paper) 0%, var(–paper-deep) 130%);
+radial-gradient(ellipse at 50% 50%, var(--paper) 0%, var(--paper-deep) 130%);
 min-height: 100vh;
 min-height: 100dvh;
 }
 body::before {
-content: “”;
+content: "";
 position: fixed;
 inset: 0;
 pointer-events: none;
-background-image: url(“data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.13  0 0 0 0 0.05  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>”);
+background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.13  0 0 0 0 0.05  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 opacity: 0.55;
 mix-blend-mode: multiply;
 z-index: 0;
@@ -92,20 +92,20 @@ animation: pageFlipOut 0.25s cubic-bezier(0.4, 0, 0.7, 0.95) both;
 /* Masthead (Contents page only) */
 .masthead { text-align: center; margin-bottom: 36px; }
 .masthead h1 {
-font-family: ‘Cormorant Garamond’, serif;
+font-family: 'Cormorant Garamond', serif;
 font-weight: 500;
 font-size: clamp(2.4rem, 8vw, 3.4rem);
 letter-spacing: 0.02em;
-color: var(–burgundy);
+color: var(--burgundy);
 margin: 0 0 6px;
 line-height: 1.05;
 outline: none;
 }
 .masthead h1:focus-visible { outline: none; }
 .masthead .subtitle {
-font-family: ‘EB Garamond’, serif;
+font-family: 'EB Garamond', serif;
 font-style: italic;
-color: var(–ink-soft);
+color: var(--ink-soft);
 font-size: 1rem;
 margin: 0 0 18px;
 letter-spacing: 0.04em;
@@ -115,14 +115,14 @@ display: block;
 margin: 0 auto;
 width: min(280px, 70%);
 height: 14px;
-color: var(–burgundy);
+color: var(--burgundy);
 }
 
 /* Instructions */
 .instructions {
 margin: 0 0 24px;
-border-top: 0.5px solid var(–rule);
-border-bottom: 0.5px solid var(–rule);
+border-top: 0.5px solid var(--rule);
+border-bottom: 0.5px solid var(--rule);
 }
 .instructions > summary {
 display: flex;
@@ -130,10 +130,10 @@ align-items: center;
 justify-content: space-between;
 padding: 14px 4px;
 cursor: pointer;
-font-family: ‘EB Garamond’, serif;
+font-family: 'EB Garamond', serif;
 font-style: italic;
 font-size: 0.95rem;
-color: var(–ink-soft);
+color: var(--ink-soft);
 letter-spacing: 0.04em;
 list-style: none;
 user-select: none;
@@ -142,40 +142,40 @@ transition: color 0.2s;
 }
 .instructions > summary::-webkit-details-marker { display: none; }
 .instructions > summary::after {
-content: “”;
+content: "";
 width: 12px; height: 8px;
 flex: 0 0 12px;
-background: url(“data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1.5 1.5 L6 6 L10.5 1.5' stroke='%236b1f24' stroke-width='1.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>”) no-repeat center;
+background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1.5 1.5 L6 6 L10.5 1.5' stroke='%236b1f24' stroke-width='1.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat center;
 transition: transform 0.3s ease;
 }
 .instructions[open] > summary::after { transform: rotate(180deg); }
 .instructions > summary:hover,
-.instructions > summary:focus-visible { color: var(–burgundy); }
+.instructions > summary:focus-visible { color: var(--burgundy); }
 .instr-list {
 list-style: none; margin: 0;
 padding: 0 4px 18px;
 }
 .instr-list li {
 padding: 12px 4px;
-border-top: 0.5px dashed var(–rule);
+border-top: 0.5px dashed var(--rule);
 font-size: 1rem;
 line-height: 1.55;
-color: var(–ink);
+color: var(--ink);
 }
 .instr-list li:first-child { border-top: 0; padding-top: 6px; }
 .instr-list em {
 font-style: italic;
-color: var(–burgundy);
+color: var(--burgundy);
 font-weight: 500;
 margin-right: 2px;
 }
 
 /* Contents page */
 .contents-heading {
-font-family: ‘Cormorant Garamond’, serif;
+font-family: 'Cormorant Garamond', serif;
 font-style: italic;
 font-size: 1.05rem;
-color: var(–ink-faint);
+color: var(--ink-faint);
 text-align: center;
 margin: 12px 0 14px;
 letter-spacing: 0.08em;
@@ -183,12 +183,12 @@ text-transform: lowercase;
 }
 .contents-list {
 list-style: none; margin: 0; padding: 0;
-border-top: 0.5px solid var(–rule);
+border-top: 0.5px solid var(--rule);
 }
-.contents-entry { border-bottom: 0.5px dashed var(–rule); }
+.contents-entry { border-bottom: 0.5px dashed var(--rule); }
 .contents-entry.contents-settings {
 border-bottom: 0;
-border-top: 0.5px solid var(–rule);
+border-top: 0.5px solid var(--rule);
 margin-top: 24px;
 }
 .contents-btn {
@@ -201,46 +201,46 @@ border: 0;
 padding: 16px 4px;
 cursor: pointer;
 text-align: left;
-color: var(–ink);
+color: var(--ink);
 font-family: inherit;
 transition: background 0.15s;
 }
 .contents-btn:hover { background: rgba(184, 146, 63, 0.06); }
 .contents-btn:focus-visible {
-outline: 2px solid var(–gold);
+outline: 2px solid var(--gold);
 outline-offset: -3px;
 }
 .contents-cap {
-font-family: ‘Cormorant Garamond’, serif;
+font-family: 'Cormorant Garamond', serif;
 font-weight: 600;
 font-size: 1.6rem;
-color: var(–burgundy);
+color: var(--burgundy);
 width: 30px;
 flex: 0 0 30px;
 text-align: center;
 line-height: 1;
 }
 .contents-name {
-font-family: ‘Cormorant Garamond’, serif;
+font-family: 'Cormorant Garamond', serif;
 font-size: 1.4rem;
-color: var(–ink);
+color: var(--ink);
 font-weight: 500;
 }
 .contents-dots {
 flex: 1;
-border-bottom: 0.5px dotted var(–rule);
+border-bottom: 0.5px dotted var(--rule);
 margin: 0 4px 6px;
 align-self: end;
 min-width: 16px;
 }
 .contents-count {
-font-family: ‘EB Garamond’, serif;
+font-family: 'EB Garamond', serif;
 font-style: italic;
-color: var(–ink-soft);
+color: var(--ink-soft);
 font-size: 1rem;
 flex: 0 0 auto;
 }
-.contents-count.empty { color: var(–ink-faint); }
+.contents-count.empty { color: var(--ink-faint); }
 
 /* Back navigation */
 .back-btn {
@@ -249,17 +249,17 @@ align-items: center;
 gap: 8px;
 background: transparent;
 border: 0;
-font-family: ‘EB Garamond’, serif;
+font-family: 'EB Garamond', serif;
 font-style: italic;
 font-size: 0.95rem;
-color: var(–ink-soft);
+color: var(--ink-soft);
 padding: 6px 4px;
 margin: 0 0 18px -4px;
 cursor: pointer;
 transition: color 0.2s;
 }
 .back-btn:hover,
-.back-btn:focus-visible { color: var(–burgundy); outline: none; }
+.back-btn:focus-visible { color: var(--burgundy); outline: none; }
 .back-arrow { width: 8px; height: 12px; color: currentColor; }
 
 /* Page header (Household / Settings) */
@@ -269,30 +269,30 @@ align-items: center;
 gap: 16px;
 margin-bottom: 28px;
 padding-bottom: 16px;
-border-bottom: 0.5px solid var(–rule);
+border-bottom: 0.5px solid var(--rule);
 }
 .page-dropcap {
 display: inline-grid;
 place-items: center;
 width: 64px; height: 64px;
 flex: 0 0 64px;
-font-family: ‘Cormorant Garamond’, serif;
+font-family: 'Cormorant Garamond', serif;
 font-weight: 600;
 font-size: 3rem;
-color: var(–burgundy);
+color: var(--burgundy);
 background:
 radial-gradient(circle at 35% 30%, rgba(232, 195, 120, 0.25) 0%, transparent 65%),
-var(–paper);
-border: 0.5px solid var(–rule);
-box-shadow: inset 0 0 0 4px var(–paper), 0 0 0 0.5px var(–gold-dark);
+var(--paper);
+border: 0.5px solid var(--rule);
+box-shadow: inset 0 0 0 4px var(--paper), 0 0 0 0.5px var(--gold-dark);
 line-height: 1;
 padding-bottom: 6px;
 }
 .page-title {
-font-family: ‘Cormorant Garamond’, serif;
+font-family: 'Cormorant Garamond', serif;
 font-weight: 500;
 font-size: 2rem;
-color: var(–ink);
+color: var(--ink);
 letter-spacing: 0.02em;
 margin: 0;
 outline: none;
@@ -303,8 +303,8 @@ outline: none;
 .inscribe {
 margin: 0 0 32px;
 padding: 18px 4px 22px;
-border-top: 0.5px solid var(–rule);
-border-bottom: 0.5px solid var(–rule);
+border-top: 0.5px solid var(--rule);
+border-bottom: 0.5px solid var(--rule);
 }
 .inscribe-grid {
 display: grid;
@@ -317,20 +317,20 @@ flex-direction: column;
 gap: 4px;
 }
 .field label {
-font-family: ‘EB Garamond’, serif;
+font-family: 'EB Garamond', serif;
 font-style: italic;
 font-size: 0.82rem;
-color: var(–ink-faint);
+color: var(--ink-faint);
 letter-spacing: 0.08em;
 text-transform: lowercase;
 }
 .field input {
-font-family: ‘EB Garamond’, serif;
+font-family: 'EB Garamond', serif;
 font-size: 1.15rem;
-color: var(–ink);
+color: var(--ink);
 background: transparent;
 border: 0;
-border-bottom: 0.5px solid var(–rule);
+border-bottom: 0.5px solid var(--rule);
 padding: 6px 2px 8px;
 border-radius: 0;
 outline: none;
@@ -338,7 +338,7 @@ outline: none;
 appearance: none;
 transition: border-color 0.2s;
 }
-.field input:focus { border-bottom-color: var(–burgundy); }
+.field input:focus { border-bottom-color: var(--burgundy); }
 .row-double {
 display: grid;
 grid-template-columns: 2fr 1fr;
@@ -355,13 +355,13 @@ display: flex;
 align-items: center;
 justify-content: center;
 gap: 18px;
-font-family: ‘Cormorant Garamond’, serif;
+font-family: 'Cormorant Garamond', serif;
 font-style: italic;
 font-weight: 500;
 font-size: 1.15rem;
 letter-spacing: 0.1em;
-color: var(–paper);
-background: var(–burgundy);
+color: var(--paper);
+background: var(--burgundy);
 border: 0;
 padding: 13px 20px;
 cursor: pointer;
@@ -371,10 +371,10 @@ inset 0 0 0 0.5px rgba(212, 181, 104, 0.55),
 0 1px 4px -2px rgba(40, 10, 14, 0.35);
 transition: transform 0.12s ease, background 0.2s;
 }
-.inscribe-btn:hover { background: var(–burgundy-warm); }
+.inscribe-btn:hover { background: var(--burgundy-warm); }
 .inscribe-btn:active { transform: translateY(1px); }
 .inscribe-btn:focus-visible {
-outline: 2px solid var(–gold);
+outline: 2px solid var(--gold);
 outline-offset: 3px;
 }
 .inscribe-btn .ornament {
@@ -382,7 +382,7 @@ width: 7px; height: 7px;
 flex: 0 0 7px;
 display: block;
 }
-.inscribe-btn .ornament path { fill: var(–gold-light); }
+.inscribe-btn .ornament path { fill: var(--gold-light); }
 
 /* Collapsed state: a single toggle button. Form expands on tap. */
 .inscribe-toggle {
@@ -395,8 +395,8 @@ background: transparent;
 border: 0;
 padding: 6px 4px;
 cursor: pointer;
-color: var(–burgundy);
-font-family: ‘EB Garamond’, serif;
+color: var(--burgundy);
+font-family: 'EB Garamond', serif;
 font-style: italic;
 font-size: 1rem;
 letter-spacing: 0.02em;
@@ -404,10 +404,10 @@ border-radius: 1px;
 transition: background 0.15s, color 0.2s;
 }
 .inscribe-toggle:hover { background: rgba(184, 146, 63, 0.06); }
-.inscribe-toggle:focus-visible { outline: 2px solid var(–gold); outline-offset: 2px; }
+.inscribe-toggle:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .inscribe-toggle-mark {
 font-size: 1.4rem;
-color: var(–gold);
+color: var(--gold);
 line-height: 1;
 font-weight: 500;
 }
@@ -426,8 +426,8 @@ margin-top: 0;
 flex: 0 0 auto;
 background: transparent;
 border: 0;
-color: var(–ink-faint);
-font-family: ‘EB Garamond’, serif;
+color: var(--ink-faint);
+font-family: 'EB Garamond', serif;
 font-style: italic;
 font-size: 0.95rem;
 cursor: pointer;
@@ -435,8 +435,8 @@ padding: 8px 14px;
 border-radius: 1px;
 transition: color 0.2s;
 }
-.inscribe-done:hover { color: var(–burgundy); }
-.inscribe-done:focus-visible { outline: 2px solid var(–gold); outline-offset: 2px; }
+.inscribe-done:hover { color: var(--burgundy); }
+.inscribe-done:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
 /* Items */
 .items {
@@ -447,7 +447,7 @@ padding: 0;
 .item {
 display: flex;
 align-items: stretch;
-border-bottom: 0.5px dashed var(–rule);
+border-bottom: 0.5px dashed var(--rule);
 position: relative;
 }
 .item:last-child { border-bottom: 0; }
@@ -471,7 +471,7 @@ border-radius: 1px;
 transition: background 0.15s;
 }
 .seal-btn:hover { background: rgba(184, 146, 63, 0.06); }
-.seal-btn:focus-visible { outline: 2px solid var(–gold); outline-offset: -2px; }
+.seal-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
 
 /* Erase button on the right */
 .erase-btn {
@@ -482,27 +482,27 @@ place-items: center;
 background: transparent;
 border: 0;
 cursor: pointer;
-color: var(–ink-faint);
+color: var(--ink-faint);
 padding: 0;
 border-radius: 1px;
 transition: color 0.2s, background 0.15s;
 }
 .erase-btn:hover {
-color: var(–burgundy);
+color: var(--burgundy);
 background: rgba(107, 31, 36, 0.05);
 }
-.erase-btn:focus-visible { outline: 2px solid var(–gold); outline-offset: -2px; }
+.erase-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
 .erase-icon { width: 14px; height: 14px; }
 
 .item-name {
 font-size: 1.1rem;
-color: var(–ink);
+color: var(--ink);
 transition: color 0.4s, opacity 0.4s;
 }
 .item-qty {
-font-family: ‘EB Garamond’, serif;
+font-family: 'EB Garamond', serif;
 font-style: italic;
-color: var(–ink-soft);
+color: var(--ink-soft);
 font-size: 0.95rem;
 text-align: right;
 min-width: 0;
@@ -519,19 +519,19 @@ display: block;
 width: 22px;
 height: 22px;
 border-radius: 50%;
-border: 1px solid var(–rule);
+border: 1px solid var(--rule);
 transition: border-color 0.2s, border-width 0.2s;
 }
 .item:not(.sealed) .seal-btn:hover .seal-circle,
 .item:not(.sealed) .seal-btn:focus-visible .seal-circle {
-border-color: var(–burgundy);
+border-color: var(--burgundy);
 border-width: 1.5px;
 }
 
 .item.sealed .item-name {
-color: var(–ink-faint);
+color: var(--ink-faint);
 text-decoration: line-through;
-text-decoration-color: var(–gold-dark);
+text-decoration-color: var(--gold-dark);
 text-decoration-thickness: 0.5px;
 }
 .item.sealed .item-qty { opacity: 0.5; }
@@ -548,7 +548,7 @@ transform-origin: center;
 100% { opacity: 1; transform: scale(1) rotate(-6deg); }
 }
 .item.sealed::after {
-content: “”;
+content: "";
 position: absolute;
 inset: 0;
 background: radial-gradient(circle at 12% 50%, rgba(224, 195, 120, 0.45) 0%, transparent 50%);
@@ -565,9 +565,9 @@ animation: shimmer 0.9s ease-out both;
 .empty {
 text-align: center;
 padding: 30px 16px;
-color: var(–ink-faint);
+color: var(--ink-faint);
 font-style: italic;
-font-family: ‘Cormorant Garamond’, serif;
+font-family: 'Cormorant Garamond', serif;
 font-size: 1.15rem;
 list-style: none;
 }
@@ -577,8 +577,8 @@ display: block;
 margin: 0 auto;
 background: transparent;
 border: 0;
-color: var(–ink-faint);
-font-family: ‘EB Garamond’, serif;
+color: var(--ink-faint);
+font-family: 'EB Garamond', serif;
 font-style: italic;
 font-size: 0.95rem;
 letter-spacing: 0.04em;
@@ -586,15 +586,15 @@ cursor: pointer;
 padding: 8px 12px;
 border-radius: 1px;
 }
-.clear-btn:hover { color: var(–burgundy); }
-.clear-btn:focus-visible { outline: 2px solid var(–gold); outline-offset: 2px; }
+.clear-btn:hover { color: var(--burgundy); }
+.clear-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
 /* Settings page */
 .settings-list {
 list-style: none;
 margin: 0 0 32px;
 padding: 0;
-border-top: 0.5px solid var(–rule);
+border-top: 0.5px solid var(--rule);
 }
 .settings-row {
 display: flex;
@@ -602,22 +602,22 @@ align-items: center;
 justify-content: space-between;
 gap: 16px;
 padding: 18px 4px;
-border-bottom: 0.5px dashed var(–rule);
+border-bottom: 0.5px dashed var(--rule);
 }
 .settings-row:last-child { border-bottom: 0; }
 .settings-label { flex: 1; }
 .settings-name {
 display: block;
-font-family: ‘Cormorant Garamond’, serif;
+font-family: 'Cormorant Garamond', serif;
 font-size: 1.25rem;
-color: var(–ink);
+color: var(--ink);
 }
 .settings-desc {
 display: block;
-font-family: ‘EB Garamond’, serif;
+font-family: 'EB Garamond', serif;
 font-style: italic;
 font-size: 0.9rem;
-color: var(–ink-faint);
+color: var(--ink-faint);
 margin-top: 2px;
 }
 
@@ -637,7 +637,7 @@ cursor: pointer; z-index: 2;
 position: absolute;
 inset: 0;
 background: transparent;
-border: 0.5px solid var(–rule);
+border: 0.5px solid var(--rule);
 border-radius: 13px;
 transition: background 0.25s, border-color 0.25s;
 }
@@ -646,27 +646,27 @@ position: absolute;
 top: 3px; left: 3px;
 width: 18px; height: 18px;
 border-radius: 50%;
-background: var(–ink-faint);
+background: var(--ink-faint);
 transition: transform 0.25s cubic-bezier(0.4, 0.1, 0.4, 1.2), background 0.25s;
 }
 .toggle input:checked ~ .track {
-background: var(–burgundy);
-border-color: var(–burgundy);
+background: var(--burgundy);
+border-color: var(--burgundy);
 }
 .toggle input:checked ~ .knob {
 transform: translateX(22px);
-background: var(–gold-light);
+background: var(--gold-light);
 }
 .toggle input:focus-visible ~ .track {
-outline: 2px solid var(–gold);
+outline: 2px solid var(--gold);
 outline-offset: 2px;
 }
 
 .reset-btn {
 background: transparent;
-border: 0.5px solid var(–burgundy);
-color: var(–burgundy);
-font-family: ‘Cormorant Garamond’, serif;
+border: 0.5px solid var(--burgundy);
+color: var(--burgundy);
+font-family: 'Cormorant Garamond', serif;
 font-style: italic;
 font-size: 1rem;
 padding: 8px 16px;
@@ -675,36 +675,36 @@ border-radius: 1px;
 letter-spacing: 0.04em;
 transition: all 0.2s;
 }
-.reset-btn:hover { background: var(–burgundy); color: var(–paper); }
-.reset-btn:focus-visible { outline: 2px solid var(–gold); outline-offset: 2px; }
+.reset-btn:hover { background: var(--burgundy); color: var(--paper); }
+.reset-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
 .colophon {
 margin: 32px 0 0;
 text-align: center;
 font-size: 0.78rem;
-color: var(–ink-faint);
+color: var(--ink-faint);
 font-style: italic;
 letter-spacing: 0.08em;
 }
 
 /* Settings: section headings */
 .settings-section-title {
-font-family: ‘Cormorant Garamond’, serif;
+font-family: 'Cormorant Garamond', serif;
 font-weight: 500;
 font-style: italic;
 font-size: 1.15rem;
-color: var(–ink-faint);
+color: var(--ink-faint);
 margin: 28px 0 10px;
 letter-spacing: 0.06em;
 text-transform: lowercase;
-border-bottom: 0.5px solid var(–rule);
+border-bottom: 0.5px solid var(--rule);
 padding-bottom: 6px;
 }
 .settings-section-note {
-font-family: ‘EB Garamond’, serif;
+font-family: 'EB Garamond', serif;
 font-style: italic;
 font-size: 0.92rem;
-color: var(–ink-soft);
+color: var(--ink-soft);
 margin: 0 0 14px;
 line-height: 1.5;
 }
@@ -720,7 +720,7 @@ display: flex;
 align-items: center;
 gap: 14px;
 padding: 12px 4px;
-border-bottom: 0.5px dashed var(–rule);
+border-bottom: 0.5px dashed var(--rule);
 }
 .settings-list-row:last-child { border-bottom: 0; }
 .settings-list-info {
@@ -729,25 +729,25 @@ min-width: 0;
 }
 .settings-list-name {
 display: block;
-font-family: ‘Cormorant Garamond’, serif;
+font-family: 'Cormorant Garamond', serif;
 font-size: 1.2rem;
-color: var(–ink);
+color: var(--ink);
 line-height: 1.2;
 }
 .settings-list-count {
 display: block;
-font-family: ‘EB Garamond’, serif;
+font-family: 'EB Garamond', serif;
 font-style: italic;
 font-size: 0.85rem;
-color: var(–ink-faint);
+color: var(--ink-faint);
 margin-top: 2px;
 }
 .settings-delete-btn {
 flex: 0 0 auto;
 background: transparent;
-border: 0.5px solid var(–rule);
-color: var(–ink-faint);
-font-family: ‘EB Garamond’, serif;
+border: 0.5px solid var(--rule);
+color: var(--ink-faint);
+font-family: 'EB Garamond', serif;
 font-style: italic;
 font-size: 0.9rem;
 padding: 6px 12px;
@@ -756,10 +756,10 @@ border-radius: 1px;
 transition: all 0.2s;
 }
 .settings-delete-btn:hover {
-color: var(–burgundy);
-border-color: var(–burgundy);
+color: var(--burgundy);
+border-color: var(--burgundy);
 }
-.settings-delete-btn:focus-visible { outline: 2px solid var(–gold); outline-offset: 2px; }
+.settings-delete-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
 /* Add a new list — toggle button + collapsible form (mirrors Inscribe) */
 .settings-add-btn {
@@ -772,26 +772,26 @@ background: transparent;
 border: 0;
 padding: 10px 4px;
 cursor: pointer;
-color: var(–burgundy);
-font-family: ‘EB Garamond’, serif;
+color: var(--burgundy);
+font-family: 'EB Garamond', serif;
 font-style: italic;
 font-size: 1rem;
 border-radius: 1px;
 transition: background 0.15s;
 }
 .settings-add-btn:hover { background: rgba(184, 146, 63, 0.06); }
-.settings-add-btn:focus-visible { outline: 2px solid var(–gold); outline-offset: 2px; }
+.settings-add-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .settings-add-mark {
 font-size: 1.4rem;
-color: var(–gold);
+color: var(--gold);
 line-height: 1;
 font-weight: 500;
 }
 .add-list-form {
 margin-top: 10px;
 padding: 14px 4px 18px;
-border-top: 0.5px solid var(–rule);
-border-bottom: 0.5px solid var(–rule);
+border-top: 0.5px solid var(--rule);
+border-bottom: 0.5px solid var(--rule);
 }
 
 /* Backup actions */
@@ -804,9 +804,9 @@ margin: 8px 0 4px;
 .settings-action-btn {
 width: 100%;
 background: transparent;
-border: 0.5px solid var(–rule);
-color: var(–ink);
-font-family: ‘EB Garamond’, serif;
+border: 0.5px solid var(--rule);
+color: var(--ink);
+font-family: 'EB Garamond', serif;
 font-style: italic;
 font-size: 1rem;
 padding: 12px 16px;
@@ -816,11 +816,11 @@ transition: all 0.2s;
 letter-spacing: 0.02em;
 }
 .settings-action-btn:hover {
-border-color: var(–burgundy);
-color: var(–burgundy);
+border-color: var(--burgundy);
+color: var(--burgundy);
 background: rgba(184, 146, 63, 0.04);
 }
-.settings-action-btn:focus-visible { outline: 2px solid var(–gold); outline-offset: 2px; }
+.settings-action-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
 /* Book cover */
 .book-stage {
@@ -839,7 +839,7 @@ cursor: pointer;
 display: flex;
 align-items: center;
 justify-content: center;
-color: var(–gold-light);
+color: var(--gold-light);
 font-family: inherit;
 background:
 radial-gradient(ellipse at 30% 18%, rgba(255,210,160,0.06) 0%, transparent 60%),
@@ -854,11 +854,11 @@ transition: transform 1.4s cubic-bezier(0.65, 0.02, 0.3, 1);
 will-change: transform;
 }
 .cover::before {
-content: “”;
+content: "";
 position: absolute;
 inset: 0;
 pointer-events: none;
-background-image: url(“data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.45 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>”);
+background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.45 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 opacity: 0.55;
 mix-blend-mode: overlay;
 }
@@ -876,7 +876,7 @@ padding: 32px 22px 64px;
 text-align: center;
 }
 .cover-frame::before {
-content: “”;
+content: "";
 position: absolute;
 inset: 9px;
 border: 0.5px solid rgba(212, 181, 104, 0.42);
@@ -890,7 +890,7 @@ filter: drop-shadow(0 1px 0 rgba(20,5,8,0.45));
 }
 .cover-title {
 display: block;
-font-family: ‘Cormorant Garamond’, serif;
+font-family: 'Cormorant Garamond', serif;
 font-weight: 500;
 font-size: clamp(2rem, 7.6vw, 3rem);
 letter-spacing: 0.02em;
@@ -901,7 +901,7 @@ margin: 0 0 14px;
 }
 .cover-sub {
 display: block;
-font-family: ‘EB Garamond’, serif;
+font-family: 'EB Garamond', serif;
 font-style: italic;
 color: rgba(212, 181, 104, 0.72);
 font-size: 1rem;
@@ -911,7 +911,7 @@ letter-spacing: 0.04em;
 position: absolute;
 bottom: 32px;
 left: 0; right: 0;
-font-family: ‘EB Garamond’, serif;
+font-family: 'EB Garamond', serif;
 font-style: italic;
 font-size: 0.78rem;
 letter-spacing: 0.22em;
@@ -925,7 +925,7 @@ animation: prompt-breathe 2.6s ease-in-out infinite;
 }
 .cover:focus-visible { outline: none; }
 .cover:focus-visible .cover-frame {
-outline: 2px solid var(–gold);
+outline: 2px solid var(--gold);
 outline-offset: 0;
 }
 
@@ -989,10 +989,8 @@ transition-duration: 0.01ms !important;
       </svg>
     </header>
 
-```
 <p class="contents-heading">table of contents</p>
 <ul class="contents-list" id="contents-list" role="list"></ul>
-```
 
   </section>
 
@@ -1006,7 +1004,6 @@ transition-duration: 0.01ms !important;
       <span>Contents</span>
     </button>
 
-```
 <header class="page-head">
   <span class="page-dropcap" aria-hidden="true" id="household-cap">P</span>
   <h2 class="page-title" id="household-title" tabindex="-1">The Pantry</h2>
@@ -1045,7 +1042,6 @@ transition-duration: 0.01ms !important;
 <ul class="items" id="household-items" role="list"></ul>
 
 <button id="clear-btn" class="clear-btn" type="button" hidden>Sweep away sealed entries</button>
-```
 
   </section>
 
@@ -1059,7 +1055,6 @@ transition-duration: 0.01ms !important;
       <span>Contents</span>
     </button>
 
-```
 <header class="page-head">
   <span class="page-dropcap" aria-hidden="true">&#x2731;</span>
   <h2 class="page-title" id="settings-title" tabindex="-1">Settings</h2>
@@ -1140,7 +1135,6 @@ transition-duration: 0.01ms !important;
 </ul>
 
 <p class="colophon">By Her Majesty&rsquo;s pleasure</p>
-```
 
   </section>
 
@@ -1204,8 +1198,7 @@ transition-duration: 0.01ms !important;
     return sundries ? sundries.id : (state.households[0] ? state.households[0].id : null);
   }
 
-  // To persist on GitHub Pages, save state.items via localStorage.setItem
-  // and load on init. Skipped here so the artifact preview works.
+  const STORAGE_KEY = 'royal-ledger:v1';
   const state = {
     items: [],
     households: DEFAULT_HOUSEHOLDS.slice(),
@@ -1346,6 +1339,52 @@ transition-duration: 0.01ms !important;
     sg.gain.exponentialRampToValueAtTime(0.0005, t + 0.60);
     sh.connect(sg).connect(ctx.destination);
     sh.start(t + 0.10); sh.stop(t + 0.65);
+  }
+
+  // ---------- Persistence ----------
+  function save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        version: 1,
+        households: state.households,
+        items: state.items,
+        prefs: state.prefs
+      }));
+    } catch (e) { /* private mode / quota — ignore */ }
+  }
+  function load() {
+    let raw;
+    try { raw = localStorage.getItem(STORAGE_KEY); }
+    catch (e) { return; }
+    if (!raw) return;
+    let data;
+    try { data = JSON.parse(raw); }
+    catch (e) { return; }
+    if (!data || typeof data !== 'object') return;
+
+    if (Array.isArray(data.households)) {
+      const households = data.households
+        .filter(h => h && typeof h.id === 'string' && typeof h.name === 'string')
+        .map(h => ({ id: h.id, name: h.name }));
+      if (households.length > 0) state.households = households;
+    }
+    const validIds = new Set(state.households.map(h => h.id));
+    if (Array.isArray(data.items)) {
+      state.items = data.items
+        .filter(i => i && typeof i.id === 'string' && typeof i.name === 'string'
+                && typeof i.cat === 'string' && validIds.has(i.cat))
+        .map(i => ({
+          id: i.id,
+          name: i.name,
+          qty: typeof i.qty === 'string' ? i.qty : '',
+          cat: i.cat,
+          sealed: !!i.sealed
+        }));
+    }
+    if (data.prefs && typeof data.prefs === 'object') {
+      state.prefs.sound      = data.prefs.sound      !== false;
+      state.prefs.animations = data.prefs.animations !== false;
+    }
   }
 
   // ---------- Helpers ----------
@@ -1658,6 +1697,7 @@ transition-duration: 0.01ms !important;
     const name = els.name.value.trim();
     const qty = els.qty.value.trim();
     add(name, qty, cat);
+    save();
     playQuill();
     announce('Inscribed: ' + name + (qty ? ', ' + qty : '') + '.');
     els.name.value = '';
@@ -1670,6 +1710,7 @@ transition-duration: 0.01ms !important;
     if (!item) return;
 
     seal(id);
+    save();
     playSeal();
     announce('Sealed: ' + (item.qty ? item.qty + ' ' : '') + item.name + '.');
     renderHousehold(state.household);
@@ -1682,6 +1723,7 @@ transition-duration: 0.01ms !important;
     const item = state.items.find(i => i.id === id);
     if (!item || !item.sealed) return;
     item.sealed = false;
+    save();
     announce('Unsealed: ' + (item.qty ? item.qty + ' ' : '') + item.name + '.');
     renderHousehold(state.household);
     // Stay on the same row, now showing "Seal …".
@@ -1698,6 +1740,7 @@ transition-duration: 0.01ms !important;
     const idx = before.findIndex(i => i.id === id);
 
     state.items = state.items.filter(i => i.id !== id);
+    save();
     announce('Erased: ' + (item.qty ? item.qty + ' ' : '') + item.name + '.');
     renderHousehold(cat);
 
@@ -1716,6 +1759,7 @@ transition-duration: 0.01ms !important;
     const n = state.items.filter(i => i.cat === cat && i.sealed).length;
     if (n === 0) return;
     clearSealedIn(cat);
+    save();
     const h = getHousehold(cat);
     announce(n + ' sealed ' + (n === 1 ? 'entry' : 'entries') + ' swept from ' + (h ? h.name : 'the list') + '.');
     renderHousehold(cat);
@@ -1723,16 +1767,19 @@ transition-duration: 0.01ms !important;
   }
   function onToggleSound() {
     state.prefs.sound = els.soundToggle.checked;
+    save();
     announce('Sound ' + (state.prefs.sound ? 'on' : 'off') + '.');
   }
   function onToggleMotion() {
     state.prefs.animations = els.motionToggle.checked;
+    save();
     announce('Page animations ' + (state.prefs.animations ? 'on' : 'off') + '.');
   }
   function onReset() {
     const ok = window.confirm('Strike every entry from every household? This cannot be undone.');
     if (!ok) return;
     state.items = [];
+    save();
     announce('The ledger has been reset.');
     goTo('contents');
   }
@@ -1763,6 +1810,7 @@ transition-duration: 0.01ms !important;
     }
     const h = { id: newHouseholdId(), name: raw };
     state.households.push(h);
+    save();
     announce('Added list: ' + raw + '.');
     onCancelAddList(); // collapse the form
     renderSettingsLists();
@@ -1779,6 +1827,7 @@ transition-duration: 0.01ms !important;
     state.households = state.households.filter(x => x.id !== id);
     state.items = state.items.filter(i => i.cat !== id);
     if (state.household === id) state.household = null;
+    save();
     announce('Deleted list: ' + h.name + '.');
     renderSettingsLists();
   }
@@ -1826,9 +1875,11 @@ transition-duration: 0.01ms !important;
         const households = data.households
           .filter(h => h && typeof h.id === 'string' && typeof h.name === 'string')
           .map(h => ({ id: h.id, name: h.name }));
+        if (households.length === 0) throw new Error('Backup has no lists');
+        const validIds = new Set(households.map(h => h.id));
         const items = data.items
           .filter(i => i && typeof i.id === 'string' && typeof i.name === 'string'
-                  && typeof i.cat === 'string')
+                  && typeof i.cat === 'string' && validIds.has(i.cat))
           .map(i => ({
             id: i.id,
             name: i.name,
@@ -1836,7 +1887,6 @@ transition-duration: 0.01ms !important;
             cat: i.cat,
             sealed: !!i.sealed
           }));
-        if (households.length === 0) throw new Error('Backup has no lists');
         const ok = window.confirm(
           'Restore from this backup? It will replace your current ledger (' +
           households.length + ' ' + (households.length === 1 ? 'list' : 'lists') +
@@ -1846,6 +1896,7 @@ transition-duration: 0.01ms !important;
         state.households = households;
         state.items = items;
         state.household = null;
+        save();
         announce('Ledger restored from backup.');
         renderSettings();
       } catch (err) {
@@ -1905,6 +1956,7 @@ transition-duration: 0.01ms !important;
     goTo(target, household);
   });
 
+  load();
   renderContents();
 })();
 </script>
