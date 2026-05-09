@@ -1199,6 +1199,11 @@ transition-duration: 0.01ms !important;
   }
 
   const STORAGE_KEY = 'royal-ledger:v1';
+  // Round-robin snapshot slots so a single corrupt write only burns one slot.
+  const SNAPSHOT_KEYS = ['royal-ledger:snap:0', 'royal-ledger:snap:1', 'royal-ledger:snap:2'];
+  const SNAPSHOT_NEXT_KEY = 'royal-ledger:snap:next';
+  let saveOk = true;
+
   const state = {
     items: [],
     households: DEFAULT_HOUSEHOLDS.slice(),
@@ -1342,25 +1347,77 @@ transition-duration: 0.01ms !important;
   }
 
   // ---------- Persistence ----------
-  function save() {
+  // Ask the browser to mark this origin as durable so the OS / browser is
+  // far less likely to evict our data under storage pressure or after long
+  // periods of inactivity. Best-effort: many browsers grant silently when
+  // installed to home screen; some may decline.
+  function requestPersistentStorage() {
+    if (!navigator.storage || !navigator.storage.persist) return;
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        version: 1,
-        households: state.households,
-        items: state.items,
-        prefs: state.prefs
-      }));
-    } catch (e) { /* private mode / quota — ignore */ }
+      navigator.storage.persisted().then(already => {
+        if (already) return;
+        navigator.storage.persist().catch(() => {});
+      }).catch(() => {});
+    } catch (e) { /* noop */ }
   }
+
+  function readJson(raw) {
+    if (!raw) return null;
+    try {
+      const data = JSON.parse(raw);
+      return (data && typeof data === 'object') ? data : null;
+    } catch (e) { return null; }
+  }
+
+  function save() {
+    const payload = JSON.stringify({
+      version: 1,
+      savedAt: new Date().toISOString(),
+      households: state.households,
+      items: state.items,
+      prefs: state.prefs
+    });
+
+    let primaryOk = false;
+    try {
+      localStorage.setItem(STORAGE_KEY, payload);
+      primaryOk = true;
+    } catch (e) { /* quota / private mode — fall through */ }
+
+    // Round-robin snapshot — protects against a single bad write
+    try {
+      const next = (parseInt(localStorage.getItem(SNAPSHOT_NEXT_KEY), 10) || 0)
+                   % SNAPSHOT_KEYS.length;
+      localStorage.setItem(SNAPSHOT_KEYS[next], payload);
+      localStorage.setItem(SNAPSHOT_NEXT_KEY, String((next + 1) % SNAPSHOT_KEYS.length));
+    } catch (e) { /* ignore snapshot failures */ }
+
+    if (!primaryOk && saveOk) {
+      saveOk = false;
+      announce('Could not save — please download a backup from Settings.');
+    } else if (primaryOk && !saveOk) {
+      saveOk = true;
+    }
+  }
+
   function load() {
-    let raw;
-    try { raw = localStorage.getItem(STORAGE_KEY); }
-    catch (e) { return; }
-    if (!raw) return;
-    let data;
-    try { data = JSON.parse(raw); }
-    catch (e) { return; }
-    if (!data || typeof data !== 'object') return;
+    let data = null;
+    try { data = readJson(localStorage.getItem(STORAGE_KEY)); } catch (e) {}
+
+    // Fall back to the freshest valid rolling snapshot
+    if (!data) {
+      const candidates = [];
+      for (const k of SNAPSHOT_KEYS) {
+        try {
+          const d = readJson(localStorage.getItem(k));
+          if (d) candidates.push(d);
+        } catch (e) {}
+      }
+      candidates.sort((a, b) => String(b.savedAt || '').localeCompare(String(a.savedAt || '')));
+      data = candidates[0] || null;
+    }
+
+    if (!data) return;
 
     if (Array.isArray(data.households)) {
       const households = data.households
@@ -1682,6 +1739,10 @@ transition-duration: 0.01ms !important;
     // Prime the AudioContext on this user gesture so quill/seal sounds
     // are guaranteed to play on iOS.
     audio();
+
+    // Request durable storage so the OS won't evict the ledger when the
+    // app sits unused on the home screen.
+    requestPersistentStorage();
 
     renderContents();
     const heading = els.pages.contents.querySelector('h1');
