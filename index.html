@@ -4,10 +4,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#6b1f24" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1f0a0e" media="(prefers-color-scheme: dark)">
+<meta id="theme-color-meta" name="theme-color" content="#6b1f24">
 <meta name="color-scheme" content="light dark">
 <title>The Royal Ledger</title>
+
+<script>
+  // Apply the saved theme preference before first paint to avoid a flash.
+  (function () {
+    try {
+      var pref = 'auto';
+      var raw = localStorage.getItem('royal-ledger:v1');
+      if (raw) {
+        var data = JSON.parse(raw);
+        var v = data && data.prefs && data.prefs.theme;
+        if (v === 'auto' || v === 'light' || v === 'dark') pref = v;
+      }
+      var effective = pref;
+      if (pref === 'auto') {
+        effective = window.matchMedia('(prefers-color-scheme: dark)').matches
+                    ? 'dark' : 'light';
+      }
+      document.documentElement.setAttribute('data-theme', effective);
+      var meta = document.getElementById('theme-color-meta');
+      if (meta) meta.content = effective === 'dark' ? '#1f0a0e' : '#6b1f24';
+    } catch (e) {}
+  })();
+</script>
 
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -45,28 +67,28 @@
     --wax-crown:    #d4b568;
     --wax-letter:   #e0c378;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --paper:        #1f0a0e;
-      --paper-deep:   #0e0405;
-      --ink:          #ead2a0;
-      --ink-soft:     #b89868;
-      --ink-faint:    #8a7044;
-      --burgundy:     #c5454c;
-      --burgundy-dim: #a3262e;
-      --burgundy-warm:#db5a62;
-      --gold:         #d4b568;
-      --gold-light:   #f0dba0;
-      --gold-dark:    #b89446;     /* brighter so the sealed-item strikethrough reads */
-      --rule:         #5a3a26;
-      --wax-bright:   #d44048;     /* warmer wax — like candle-lit sealing wax */
-      --wax-mid:      #8a2429;
-      --wax-dark:     #4d1419;
-      --wax-edge:     #4d1419;
-      --wax-ring:     #d4b568;
-      --wax-crown:    #f0dba0;
-      --wax-letter:   #f4ead4;
-    }
+  :root[data-theme="light"] { color-scheme: light; }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --paper:        #1f0a0e;
+    --paper-deep:   #0e0405;
+    --ink:          #ead2a0;
+    --ink-soft:     #b89868;
+    --ink-faint:    #8a7044;
+    --burgundy:     #c5454c;
+    --burgundy-dim: #a3262e;
+    --burgundy-warm:#db5a62;
+    --gold:         #d4b568;
+    --gold-light:   #f0dba0;
+    --gold-dark:    #b89446;     /* brighter so the sealed-item strikethrough reads */
+    --rule:         #5a3a26;
+    --wax-bright:   #d44048;     /* warmer wax — like candle-lit sealing wax */
+    --wax-mid:      #8a2429;
+    --wax-dark:     #4d1419;
+    --wax-edge:     #4d1419;
+    --wax-ring:     #d4b568;
+    --wax-crown:    #f0dba0;
+    --wax-letter:   #f4ead4;
   }
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
@@ -100,26 +122,24 @@ mix-blend-mode: multiply;
 z-index: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background:
-      radial-gradient(ellipse at 20% 10%, rgba(212, 181, 104, 0.10) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 90%, rgba(60, 12, 18, 0.55) 0%, transparent 55%),
-      radial-gradient(ellipse at 50% 50%, var(--paper) 0%, var(--paper-deep) 130%);
-  }
-  body::before {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.95  0 0 0 0 0.85  0 0 0 0 0.6  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+:root[data-theme="dark"] body {
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(212, 181, 104, 0.10) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 90%, rgba(60, 12, 18, 0.55) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, var(--paper) 0%, var(--paper-deep) 130%);
+}
+:root[data-theme="dark"] body::before {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.95  0 0 0 0 0.85  0 0 0 0 0.6  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   opacity: 0.4;
   mix-blend-mode: screen;
-  }
-  /* Chevron in instructions summary needs a brighter stroke on dark paper */
-  .instructions > summary::after {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1.5 1.5 L6 6 L10.5 1.5' stroke='%23c5454c' stroke-width='1.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
-  }
-  /* CTA buttons keep cream text on burgundy (otherwise --paper inverts to dark) */
-  .inscribe-btn,
-  .reset-btn:hover { color: #f4ead4; }
 }
+/* Chevron in instructions summary needs a brighter stroke on dark paper */
+:root[data-theme="dark"] .instructions > summary::after {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1.5 1.5 L6 6 L10.5 1.5' stroke='%23c5454c' stroke-width='1.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+}
+/* CTA buttons keep cream text on burgundy (otherwise --paper inverts to dark) */
+:root[data-theme="dark"] .inscribe-btn,
+:root[data-theme="dark"] .reset-btn:hover { color: #f4ead4; }
 
 body.book-closed { overflow: hidden; }
 
@@ -728,6 +748,36 @@ outline: 2px solid var(--gold);
 outline-offset: 2px;
 }
 
+/* Theme segmented control (Auto / Light / Dark) */
+.theme-seg-group {
+  display: inline-flex;
+  flex: 0 0 auto;
+  border: 0.5px solid var(--rule);
+  border-radius: 1px;
+  overflow: hidden;
+}
+.theme-seg {
+  background: transparent;
+  border: 0;
+  border-left: 0.5px solid var(--rule);
+  padding: 7px 12px;
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: background 0.15s, color 0.2s;
+}
+.theme-seg:first-child { border-left: 0; }
+.theme-seg:hover { color: var(--burgundy); }
+.theme-seg[aria-pressed="true"] {
+  background: var(--burgundy);
+  color: var(--paper);
+}
+:root[data-theme="dark"] .theme-seg[aria-pressed="true"] { color: #f4ead4; }
+.theme-seg:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
 .reset-btn {
 background: transparent;
 border: 0.5px solid var(--burgundy);
@@ -1193,6 +1243,17 @@ transition-duration: 0.01ms !important;
   </li>
   <li class="settings-row" role="listitem">
     <span class="settings-label">
+      <span class="settings-name">Theme</span>
+      <span class="settings-desc">Match the phone, or choose.</span>
+    </span>
+    <div class="theme-seg-group" role="group" aria-label="Theme">
+      <button type="button" class="theme-seg" data-theme-pref="auto">Auto</button>
+      <button type="button" class="theme-seg" data-theme-pref="light">Light</button>
+      <button type="button" class="theme-seg" data-theme-pref="dark">Dark</button>
+    </div>
+  </li>
+  <li class="settings-row" role="listitem">
+    <span class="settings-label">
       <span class="settings-name">Reset the ledger</span>
       <span class="settings-desc">Strike every entry from every list. Cannot be undone.</span>
     </span>
@@ -1275,7 +1336,7 @@ transition-duration: 0.01ms !important;
     households: DEFAULT_HOUSEHOLDS.slice(),
     page: 'contents',
     household: null,
-    prefs: { sound: true, animations: true }
+    prefs: { sound: true, animations: true, theme: 'auto' }
   };
 
   const els = {
@@ -1311,7 +1372,8 @@ transition-duration: 0.01ms !important;
     importBtn:      document.getElementById('import-btn'),
     importFile:     document.getElementById('import-file'),
     status:         document.getElementById('status'),
-    waxTpl:         document.getElementById('wax-template')
+    waxTpl:         document.getElementById('wax-template'),
+    themeBtns:      Array.from(document.querySelectorAll('.theme-seg'))
   };
 
   // ---------- Audio ----------
@@ -1507,8 +1569,41 @@ transition-duration: 0.01ms !important;
     if (data.prefs && typeof data.prefs === 'object') {
       state.prefs.sound      = data.prefs.sound      !== false;
       state.prefs.animations = data.prefs.animations !== false;
+      if (data.prefs.theme === 'auto' || data.prefs.theme === 'light' || data.prefs.theme === 'dark') {
+        state.prefs.theme = data.prefs.theme;
+      }
     }
   }
+
+  // ---------- Theme ----------
+  const darkMQ = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function effectiveTheme(pref) {
+    if (pref === 'light' || pref === 'dark') return pref;
+    return darkMQ.matches ? 'dark' : 'light';
+  }
+  function applyTheme(pref) {
+    const eff = effectiveTheme(pref);
+    document.documentElement.setAttribute('data-theme', eff);
+    const meta = document.getElementById('theme-color-meta');
+    if (meta) meta.content = eff === 'dark' ? '#1f0a0e' : '#6b1f24';
+    if (els.themeBtns) {
+      els.themeBtns.forEach(btn => {
+        btn.setAttribute('aria-pressed', btn.dataset.themePref === pref ? 'true' : 'false');
+      });
+    }
+  }
+  function onSelectTheme(pref) {
+    if (pref !== 'auto' && pref !== 'light' && pref !== 'dark') return;
+    state.prefs.theme = pref;
+    save();
+    applyTheme(pref);
+    announce('Theme: ' + (pref === 'auto' ? 'follows phone' : pref) + '.');
+  }
+  // Re-apply when the system theme changes and the user is on Auto.
+  darkMQ.addEventListener('change', () => {
+    if (state.prefs.theme === 'auto') applyTheme('auto');
+  });
 
   // ---------- Helpers ----------
   function uid() { return 'i' + Math.random().toString(36).slice(2, 9); }
@@ -2066,6 +2161,9 @@ transition-duration: 0.01ms !important;
   els.soundToggle.addEventListener('change', onToggleSound);
   els.motionToggle.addEventListener('change', onToggleMotion);
   els.resetBtn.addEventListener('click', onReset);
+  els.themeBtns.forEach(btn => {
+    btn.addEventListener('click', () => onSelectTheme(btn.dataset.themePref));
+  });
   els.addListBtn.addEventListener('click', onOpenAddList);
   els.cancelAddList.addEventListener('click', onCancelAddList);
   els.confirmAddList.addEventListener('click', onConfirmAddList);
@@ -2084,6 +2182,7 @@ transition-duration: 0.01ms !important;
   });
 
   load();
+  applyTheme(state.prefs.theme);
   renderContents();
 
   // Register the service worker so the app works offline and can be
